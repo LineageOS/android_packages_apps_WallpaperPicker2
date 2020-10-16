@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d21e430f_de6a57db",
+        "filename": "src/com/android/wallpaper/picker/PreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 11883
+      },
+      "writtenOn": "2020-10-16T13:38:50Z",
+      "side": 1,
+      "message": "float[] radii \u003d bottomSheetBackground.getCornerRadii();\n            if (radii !\u003d null) {\n                for (int i \u003d 0; i \u003c radii.length; i++) {\n                    radii[i]*\u003d2f;\n                }\n                bottomSheetBackground \u003d ((GradientDrawable)bottomSheetBackground.mutate());\n                bottomSheetBackground.setCornerRadii(radii);\n           }",
+      "range": {
+        "startLine": 230,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 9
+      },
+      "revId": "2d962722d7568de02fb786503bab1e628cfd6901",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    }
+  ]
+}

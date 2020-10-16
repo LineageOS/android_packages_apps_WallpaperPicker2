@@ -22,6 +22,30 @@
       "revId": "2d962722d7568de02fb786503bab1e628cfd6901",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57e8cf80_b9b5f590",
+        "filename": "src/com/android/wallpaper/picker/PreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 4550
+      },
+      "writtenOn": "2020-10-16T14:36:47Z",
+      "side": 1,
+      "message": "Doesn\u0027t work because getCornerRadii() throws the NPE",
+      "parentUuid": "d21e430f_de6a57db",
+      "range": {
+        "startLine": 230,
+        "startChar": 0,
+        "endLine": 239,
+        "endChar": 9
+      },
+      "revId": "2d962722d7568de02fb786503bab1e628cfd6901",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
     }
   ]
 }

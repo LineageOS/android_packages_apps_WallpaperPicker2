@@ -47,6 +47,7 @@ public class PartnerWallpaperInfo extends WallpaperInfo {
                     return new PartnerWallpaperInfo[size];
                 }
             };
+    private String mExtra;
     private int mThumbRes;
     private int mFullRes;
     private ResourceAsset mAsset;
@@ -54,12 +55,14 @@ public class PartnerWallpaperInfo extends WallpaperInfo {
     private Resources mPartnerResources;
     private boolean mFetchedPartnerResources;
 
-    public PartnerWallpaperInfo(int thumbRes, int fullRes) {
+    public PartnerWallpaperInfo(String extra, int thumbRes, int fullRes) {
+        mExtra = extra;
         mThumbRes = thumbRes;
         mFullRes = fullRes;
     }
 
     private PartnerWallpaperInfo(Parcel in) {
+        mExtra = in.readString();
         mThumbRes = in.readInt();
         mFullRes = in.readInt();
     }
@@ -95,7 +98,7 @@ public class PartnerWallpaperInfo extends WallpaperInfo {
 
                 if (thumbRes != 0) {
                     final int fullRes = partnerRes.getIdentifier(extra, "drawable", packageName);
-                    WallpaperInfo wallpaperInfo = new PartnerWallpaperInfo(thumbRes, fullRes);
+                    WallpaperInfo wallpaperInfo = new PartnerWallpaperInfo(extra, thumbRes, fullRes);
                     wallpaperInfos.add(wallpaperInfo);
                 }
             } else {
@@ -145,6 +148,11 @@ public class PartnerWallpaperInfo extends WallpaperInfo {
     }
 
     @Override
+    public String getWallpaperId() {
+        return "partner-wallpaper-" + mExtra;
+    }
+
+    @Override
     public void showPreview(Activity srcActivity, InlinePreviewIntentFactory factory,
                             int requestCode) {
         srcActivity.startActivityForResult(factory.newIntent(srcActivity, this), requestCode);
@@ -158,6 +166,7 @@ public class PartnerWallpaperInfo extends WallpaperInfo {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mExtra);
         parcel.writeInt(mThumbRes);
         parcel.writeInt(mFullRes);
     }

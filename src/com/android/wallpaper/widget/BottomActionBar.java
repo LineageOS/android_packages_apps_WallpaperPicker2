@@ -76,12 +76,16 @@ public class BottomActionBar extends FrameLayout {
         // Workaround as we don't have access to bottomDialogCornerRadius, mBottomSheet radii are
         // set to dialogCornerRadius by default.
         GradientDrawable bottomSheetBackground = (GradientDrawable) bottomSheet.getBackground();
-        float[] radii = bottomSheetBackground.getCornerRadii();
-        for (int i = 0; i < radii.length; i++) {
-            radii[i]*=2f;
+        try {
+            float[] radii = bottomSheetBackground.getCornerRadii();
+            for (int i = 0; i < radii.length; i++) {
+                radii[i]*=2f;
+            }
+            bottomSheetBackground = ((GradientDrawable)bottomSheetBackground.mutate());
+            bottomSheetBackground.setCornerRadii(radii);
+        } catch (NullPointerException npe) {
+            // Log.e(TAG, "cornerRadii not available", npe);
         }
-        bottomSheetBackground = ((GradientDrawable)bottomSheetBackground.mutate());
-        bottomSheetBackground.setCornerRadii(radii);
         bottomSheet.setBackground(bottomSheetBackground);
 
         ImageView informationIcon = findViewById(R.id.action_information);

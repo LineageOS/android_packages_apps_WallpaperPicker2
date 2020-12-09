@@ -16,6 +16,7 @@
 package com.android.wallpaper.picker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
@@ -34,7 +35,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -45,8 +45,11 @@ import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.model.Category;
 import com.android.wallpaper.module.InjectorProvider;
 import com.android.wallpaper.module.UserEventLogger;
+import com.android.wallpaper.util.DeepLinkUtils;
 import com.android.wallpaper.util.DisplayMetricsRetriever;
-import com.android.wallpaper.util.TileSizeCalculator;
+import com.android.wallpaper.util.SizeCalculator;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate;
+import com.android.wallpaper.widget.WallpaperPickerRecyclerViewAccessibilityDelegate.BottomSheetHost;
 
 import com.bumptech.glide.Glide;
 
@@ -78,9 +81,19 @@ public class CategorySelectorFragment extends Fragment {
         /**
          * Shows the wallpaper page of the specific category.
          *
-         * @param collectionId the id of the category
+         * @param category the wallpaper's {@link Category}
          */
-        void show(String collectionId);
+        void show(Category category);
+
+        /**
+         * Sets the title in the toolbar.
+         */
+        void setToolbarTitle(CharSequence title);
+
+        /**
+         * Fetches the wallpaper categories.
+         */
+        void fetchCategories();
     }
 
     private RecyclerView mImageGrid;
@@ -99,17 +112,24 @@ public class CategorySelectorFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_category_selector, container,
                 /* attachToRoot= */ false);
-
         mImageGrid = view.findViewById(R.id.category_grid);
         mImageGrid.addItemDecoration(new GridPaddingDecoration(
                 getResources().getDimensionPixelSize(R.dimen.grid_padding)));
 
-        mTileSizePx = TileSizeCalculator.getCategoryTileSize(getActivity());
+        mTileSizePx = SizeCalculator.getCategoryTileSize(getActivity());
 
         mImageGrid.setAdapter(mAdapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), getNumColumns());
         mImageGrid.setLayoutManager(gridLayoutManager);
+        mImageGrid.setAccessibilityDelegateCompat(
+                new WallpaperPickerRecyclerViewAccessibilityDelegate(
+                        mImageGrid, (BottomSheetHost) getParentFragment(), getNumColumns()));
+        getCategorySelectorFragmentHost().setToolbarTitle(getText(R.string.wallpaper_title));
+
+        if (!DeepLinkUtils.isDeepLink(getActivity().getIntent())) {
+            getCategorySelectorFragmentHost().fetchCategories();
+        }
 
         return view;
     }
@@ -184,7 +204,7 @@ public class CategorySelectorFragment extends Fragment {
 
     private int getNumColumns() {
         Activity activity = getActivity();
-        return activity == null ? 0 : TileSizeCalculator.getNumCategoryColumns(activity);
+        return activity == null ? 1 : SizeCalculator.getNumCategoryColumns(activity);
     }
 
 
@@ -235,7 +255,7 @@ public class CategorySelectorFragment extends Fragment {
                 return;
             }
 
-            getCategorySelectorFragmentHost().show(mCategory.getCollectionId());
+            getCategorySelectorFragmentHost().show(mCategory);
         }
 
         /**

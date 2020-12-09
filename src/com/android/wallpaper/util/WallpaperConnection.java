@@ -34,11 +34,20 @@ import android.view.WindowManager.LayoutParams;
 
 import androidx.annotation.Nullable;
 
+import com.android.systemui.shared.system.WallpaperEngineCompat;
+
 /**
  * Implementation of {@link IWallpaperConnection} that handles communication with a
  * {@link android.service.wallpaper.WallpaperService}
  */
 public class WallpaperConnection extends IWallpaperConnection.Stub implements ServiceConnection {
+
+    /**
+     * Returns whether live preview is available in framework.
+     */
+    public static boolean isPreviewAvailable() {
+        return WallpaperEngineCompat.supportsScalePreview();
+    }
 
     private static final String TAG = "WallpaperConnection";
     private final Activity mActivity;
@@ -51,6 +60,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private boolean mIsVisible;
     private boolean mIsEngineVisible;
     private boolean mEngineReady;
+    private WallpaperEngineCompat mEngineCompat;
 
     /**
      * @param intent used to bind the wallpaper service
@@ -84,6 +94,11 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
             mConnected = true;
         }
+
+        if (mListener != null) {
+            mListener.onConnected();
+        }
+
         return true;
     }
 
@@ -100,6 +115,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
                     // Ignore
                 }
                 mEngine = null;
+                mEngineCompat = null;
             }
             try {
                 mActivity.unbindService(this);
@@ -138,6 +154,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     public void onServiceDisconnected(ComponentName name) {
         mService = null;
         mEngine = null;
+        mEngineCompat = null;
         Log.w(TAG, "Wallpaper service gone: " + name);
     }
 
@@ -148,9 +165,18 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
         synchronized (this) {
             if (mConnected) {
                 mEngine = engine;
+                mEngineCompat = new WallpaperEngineCompat(mEngine);
                 updateEnginePosition();
                 if (mIsVisible) {
                     setEngineVisibility(true);
+                }
+
+                // Some wallpapers don't trigger #onWallpaperColorsChanged from remote. Requesting
+                // wallpaper color here to ensure the #onWallpaperColorsChanged would get called.
+                try {
+                    mEngine.requestWallpaperColors();
+                } catch (RemoteException e) {
+                    Log.w(TAG, "Failed requesting wallpaper colors", e);
                 }
             } else {
                 try {
@@ -163,19 +189,8 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     }
 
     private void updateEnginePosition() {
-        if (mWallpaperPreviewRect != null) {
-            // TODO(santie): replace with proper surface resizing when the API is available
-            View decorView = mActivity.getWindow().getDecorView();
-            int availw = decorView.getWidth();
-            int availh = decorView.getHeight();
-            try {
-                mEngine.setDisplayPadding(
-                        new Rect(-mWallpaperPreviewRect.left, -mWallpaperPreviewRect.top,
-                                mWallpaperPreviewRect.right - availw,
-                                mWallpaperPreviewRect.bottom - availh));
-            } catch (RemoteException e) {
-                Log.e(TAG, "Couldn't set preview padding", e);
-            }
+        if (mWallpaperPreviewRect != null && mEngineCompat != null) {
+            mEngineCompat.scalePreview(mWallpaperPreviewRect);
         }
     }
 
@@ -195,7 +210,11 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
 
     @Override
     public void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {
-
+        mActivity.runOnUiThread(() -> {
+            if (mListener != null) {
+                mListener.onWallpaperColorsChanged(colors, displayId);
+            }
+        });
     }
 
     @Override
@@ -213,9 +232,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
      */
     public void updatePreviewPosition(Rect positionGlobalRect) {
         mWallpaperPreviewRect = positionGlobalRect;
-        if (mEngine != null) {
-            updateEnginePosition();
-        }
+        updateEnginePosition();
     }
 
     /**
@@ -236,7 +253,7 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
     private void setEngineVisibility(boolean visible) {
         if (mEngine != null && visible != mIsEngineVisible) {
             try {
-                mEngine.setVisibility(true);
+                mEngine.setVisibility(visible);
                 mIsEngineVisible = visible;
             } catch (RemoteException e) {
                 Log.w(TAG, "Failure setting wallpaper visibility ", e);
@@ -262,5 +279,10 @@ public class WallpaperConnection extends IWallpaperConnection.Stub implements Se
          * Called after the wallpaper has been rendered for the first time.
          */
         default void onEngineShown() {}
+
+        /**
+         * Called after the wallpaper color is available or updated.
+         */
+        default void onWallpaperColorsChanged(WallpaperColors colors, int displayId) {}
     }
 }

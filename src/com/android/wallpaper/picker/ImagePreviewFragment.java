@@ -85,6 +85,7 @@ public class ImagePreviewFragment extends PreviewFragment {
     private final WallpaperSurfaceCallback mWallpaperSurfaceCallback =
             new WallpaperSurfaceCallback();
 
+    private boolean mFullResViewInitialized;
     private SubsamplingScaleImageView mFullResImageView;
     private Asset mWallpaperAsset;
     private Point mScreenSize;
@@ -277,6 +278,14 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
+        synchronized (this) {
+            // Skip init if already initialized or dependencies aren't ready yet
+            if (mFullResViewInitialized || mFullResImageView == null || mRawWallpaperSize == null) {
+                return;
+            }
+            mFullResViewInitialized = true;
+        }
+
         // Minimum scale will only be respected under this scale type.
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         // When we set a minimum scale bigger than the scale with which the full image is shown,
@@ -514,6 +523,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mHost.setView(wallpaperPreviewContainer, wallpaperPreviewContainer.getWidth(),
                         wallpaperPreviewContainer.getHeight());
                 mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
+                initFullResView();
             }
         }
 

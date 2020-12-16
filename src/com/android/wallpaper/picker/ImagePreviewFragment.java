@@ -276,6 +276,14 @@ public class ImagePreviewFragment extends PreviewFragment {
      * initializing a zoom-scroll observer and click listener.
      */
     private void initFullResView() {
+        // Only initialize if both WallpaperSurfaceCallback and decodeRawDimensions have finished,
+        // and the view hasn't already been initialized
+        if (mFullResImageView != null ||
+                mRawWallpaperSize != null &&
+                !mFullResImageView.hasImage()) {
+            return;
+        }
+
         // Minimum scale will only be respected under this scale type.
         mFullResImageView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_CUSTOM);
         // When we set a minimum scale bigger than the scale with which the full image is shown,
@@ -494,6 +502,7 @@ public class ImagePreviewFragment extends PreviewFragment {
                 mHost.setView(wallpaperPreviewContainer, wallpaperPreviewContainer.getWidth(),
                         wallpaperPreviewContainer.getHeight());
                 mWallpaperSurface.setChildSurfacePackage(mHost.getSurfacePackage());
+                initFullResView();
             }
         }
 

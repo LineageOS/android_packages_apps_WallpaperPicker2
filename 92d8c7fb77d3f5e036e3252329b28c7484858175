@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2bbbbe39_eb02fdf8",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 13028
+      },
+      "writtenOn": "2021-01-06T16:10:32Z",
+      "side": 1,
+      "message": "just move these two lines into onBottomActionBarReady - that way you give it an explicit oder",
+      "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e90f2927_cf099da3",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 13028
+      },
+      "writtenOn": "2021-01-06T16:10:32Z",
+      "side": 1,
+      "message": "the checks should go into the method. That way the method needs to know if its ok to execute its code or to return early",
+      "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d22e25e3_6fcb3567",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 13028
+      },
+      "writtenOn": "2021-01-06T16:10:32Z",
+      "side": 1,
+      "message": "if this is already true, bail out of the function early - no need to execute everything twice",
+      "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7296ef4c_632f5ba1",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 13028
+      },
+      "writtenOn": "2021-01-06T16:10:32Z",
+      "side": 1,
+      "message": "check these in the method, call it unconditionally",
+      "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    }
+  ]
+}

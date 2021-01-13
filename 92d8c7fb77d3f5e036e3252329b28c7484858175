@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ef040164_7d689e11",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 27617
+      },
+      "writtenOn": "2021-01-13T05:07:23Z",
+      "side": 1,
+      "message": "I don\u0027t understand how that would solve the issue, because:\n- The ordering issue comes from the fact that both renderImageWallpaper and decodeRawDimensions (in onBottomActionBarReady) are callback-based\n- If the callback is registered after the surface is ready, it may never fire and thus the image may never load\n- Only calling renderImageWallpaper after initFullResView in decodeRawDimensions introduces a delay with a black screen due to not taking advantage of multithreaded async loading, and there are still occasional black screens and crashes:\n\n```\nE AndroidRuntime: FATAL EXCEPTION: main\nE AndroidRuntime: Process: com.android.wallpaper, PID: 4835\nE AndroidRuntime: java.lang.RuntimeException: Unable to destroy activity {com.android.wallpaper/com.android.wallpaper.picker.PreviewActivity}: java.lang.NullPointerException: Attempt to invoke virtual method \u0027void com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.recycle()\u0027 on a null object reference\nE AndroidRuntime: \tat android.app.ActivityThread.performDestroyActivity(ActivityThread.java:5105)\nE AndroidRuntime: \tat android.app.ActivityThread.handleDestroyActivity(ActivityThread.java:5135)\nE AndroidRuntime: \tat android.app.servertransaction.DestroyActivityItem.execute(DestroyActivityItem.java:44)\nE AndroidRuntime: \tat android.app.servertransaction.TransactionExecutor.executeLifecycleState(TransactionExecutor.java:176)\nE AndroidRuntime: \tat android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:97)\nE AndroidRuntime: \tat android.app.ActivityThread$H.handleMessage(ActivityThread.java:2066)\nE AndroidRuntime: \tat android.os.Handler.dispatchMessage(Handler.java:106)\nE AndroidRuntime: \tat android.os.Looper.loop(Looper.java:223)\nE AndroidRuntime: \tat android.app.ActivityThread.main(ActivityThread.java:7660)\nE AndroidRuntime: \tat java.lang.reflect.Method.invoke(Native Method)\nE AndroidRuntime: \tat com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:592)\nE AndroidRuntime: \tat com.android.internal.os.ZygoteInit.main(ZygoteInit.java:947)\nE AndroidRuntime: Caused by: java.lang.NullPointerException: Attempt to invoke virtual method \u0027void com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView.recycle()\u0027 on a null object reference\nE AndroidRuntime: \tat com.android.wallpaper.picker.ImagePreviewFragment.onDestroy(ImagePreviewFragment.java:210)\nE AndroidRuntime: \tat androidx.fragment.app.Fragment.performDestroy(Fragment.java:3152)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentStateManager.destroy(FragmentStateManager.java:738)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentManager.moveToState(FragmentManager.java:1417)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentManager.moveToState(FragmentManager.java:1477)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentManager.moveFragmentToExpectedState(FragmentManager.java:1555)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentManager.moveToState(FragmentManager.java:1608)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentManager.dispatchStateChange(FragmentManager.java:3046)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentManager.dispatchDestroy(FragmentManager.java:3025)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentController.dispatchDestroy(FragmentController.java:334)\nE AndroidRuntime: \tat androidx.fragment.app.FragmentActivity.onDestroy(FragmentActivity.java:293)\nE AndroidRuntime: \tat androidx.appcompat.app.AppCompatActivity.onDestroy(AppCompatActivity.java:257)\nE AndroidRuntime: \tat android.app.Activity.performDestroy(Activity.java:8245)\nE AndroidRuntime: \tat android.app.Instrumentation.callActivityOnDestroy(Instrumentation.java:1344)\nE AndroidRuntime: \tat android.app.ActivityThread.performDestroyActivity(ActivityThread.java:5090)\nE AndroidRuntime: \t... 11 more\n```",
+      "parentUuid": "2bbbbe39_eb02fdf8",
+      "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e90f2927_cf099da3",
         "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "011f4d87_b743f586",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 27617
+      },
+      "writtenOn": "2021-01-13T05:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e90f2927_cf099da3",
+      "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a729ccb3_0842693d",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 27617
+      },
+      "writtenOn": "2021-01-13T05:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d22e25e3_6fcb3567",
+      "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7296ef4c_632f5ba1",
         "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
         "patchSetId": 1
@@ -67,6 +121,24 @@
       "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
       "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3fdcdeb_3d9ca7ab",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 27617
+      },
+      "writtenOn": "2021-01-13T05:07:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7296ef4c_632f5ba1",
+      "revId": "92d8c7fb77d3f5e036e3252329b28c7484858175",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": false
     }
   ]
 }

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a084645_506f9fc8",
+        "filename": "src/com/android/wallpaper/picker/ImagePreviewFragment.java",
+        "patchSetId": 4
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 13028
+      },
+      "writtenOn": "2021-01-14T21:37:01Z",
+      "side": 1,
+      "message": "this block has a line length issue in L#281 (see the line which doesn\u0027t get a number due to auto-wrapping)\nMaybe use\nif (mFullResImageView \u003d\u003d null || mRawWallpaperSize \u003d\u003d null || mFullResViewInitialized) {\n    mFullResViewInitialized \u003d true;\n    return;\n}\ninstead (ofc shifting it to the proper indentation) - it doesn\u0027t need the else and saves 1 char in the condition, which happens to be the current line\u0027s overlength",
+      "range": {
+        "startLine": 281,
+        "startChar": 12,
+        "endLine": 286,
+        "endChar": 9
+      },
+      "revId": "d28cc47e59ecf04eefc0e05ff91203c343bf321d",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71",
+      "unresolved": true
+    }
+  ]
+}

@@ -84,5 +84,15 @@
     <string name="configure_wallpaper">Gosodiadau…</string>
     <string name="delete_live_wallpaper">Dileu</string>
     <string name="delete_wallpaper_confirmation">Dileu\u2019r papur wal hwn o dy ffôn?</string>
+    <string name="bottom_action_bar_back">Nôl</string>
+    <string name="bottom_action_bar_edit">Golygu</string>
+    <string name="bottom_action_bar_download">Lawrlwytho</string>
+    <string name="bottom_action_bar_slideshow_wallpaper">Papur Wâl Sleidiau</string>
+    <string name="bottom_action_bar_apply">Gosod</string>
+    <string name="accessibility_preview_pager" msgid="3548503287402185430">Tudalen <xliff:g name="current_page" example="1">%1$d</xliff:g> o <xliff:g name="num_pages" example="2">%2$d</xliff:g></string>
+    <string name="next_page_content_description" msgid="5290226604542300962">Nesaf</string>
+    <string name="previous_page_content_description" msgid="6025726405430262788">Blaenorol</string>
     <string name="wallpaper_title">Papur wal</string>
+    <string name="wallpaper_preview_card_content_description">Rhagolwg papur wal</string>
+    <string name="collection_not_exist_msg">Dyw\'r casglaiad ddim yn bodoli.</string>
 </resources>

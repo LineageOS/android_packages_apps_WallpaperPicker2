@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de91a67e_628cf9ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 16185
+      },
+      "writtenOn": "2021-11-16T00:32:23Z",
+      "side": 1,
+      "message": "privapp permissions missing:\n\n11-16 00:24:53.323  6314  6314 E AndroidRuntime: java.lang.IllegalStateException: Signature|privileged permissions not in privapp-permissions allowlist: {com.android.wallpaper (/system/system_ext/priv-app/ThemePicker): android.permission.READ_WALLPAPER_INTERNAL}",
+      "revId": "8188b13d4cbbe59f132792ff3b73feae0cdb99fe",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}

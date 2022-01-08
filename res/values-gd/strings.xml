@@ -15,102 +15,232 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- The name of this application, a wallpaper picker. [CHAR LIMIT=50] -->
     <string name="wallpaper_app_name">Pàipearan-balla</string>
     <string name="app_name">@string/wallpaper_app_name</string>
+    <!-- UI Strings -->
+    <!-- Label which asks the user to select a wallpaper category from the given choices. [CHAR LIMIT=50] -->
     <string name="select_wallpaper_label">Roinnean-seòrsa nam pàipearan-balla</string>
+    <!-- Label for a button which lets user set the displayed image as wallpaper. [CHAR LIMIT=30] -->
     <string name="set_wallpaper_button_text">Suidhich am pàipear-balla</string>
-    <string name="set_wallpaper_progress_message">A’ suidheachadh a’ phàipeir-bhalla…</string>
+    <!-- Message shown in a dialog indicating that the app is setting an image as the device
+         wallpaper. [CHAR LIMIT=100] -->
+    <string name="set_wallpaper_progress_message">A’ suidheachadh a’ phàipeir-bhalla&#8230;</string>
+    <!-- Label for a button which lets user try to set the wallpaper again. [CHAR LIMIT=30] -->
     <string name="try_again">Feuch ris a‑rithist</string>
+    <!-- Error message indicating the app could not successfully set an image as the device
+         wallpaper. [CHAR LIMIT=100] -->
     <string name="set_wallpaper_error_message">Cha b’ urrainn dhuinn am pàipear-balla a suidheachadh.</string>
+    <!-- Error message indicating the app could not load the user-selected wallpaper image for
+         preview. [CHAR LIMIT=100] -->
     <string name="load_wallpaper_error_message">        Cha b’ urrainn dhuinn am pàipear-balla a luchdadh. Tha an dealbh coirbte no chan eil e ri fhaighinn.
     </string>
+    <!-- Label indicating that the wallpaper being shown near it is the wallpaper that is currently
+         set on the device. [CHAR LIMIT=100] -->
     <string name="static_wallpaper_presentation_mode_message">’Ga chleachdadh an-dràsta</string>
+    <!-- Label indicating that the wallpaper being shown near it is the wallpaper that is currently
+         set on the device and is part of a daily rotation of wallpapers. [CHAR LIMIT=100] -->
     <string name="rotating_wallpaper_presentation_mode_message">Pàipear-balla làitheil</string>
+    <!-- Label indicating that the wallpaper being shown is set both on home screen and on lock
+        screen [CHAR LIMIT=100] -->
     <string name="wallpaper_destination_both">An sgrìn-ghlasaidh ⁊ dachaigh</string>
+    <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
+         [CHAR LIMIT=30] -->
     <string name="home_screen_message">An sgrìn dachaigh</string>
+    <!-- Label referring to the lock screen of the device, i.e. what is shown when user turns on the
+         device screen. [CHAR LIMIT=30] -->
     <string name="lock_screen_message">An sgrìn-ghlasaidh</string>
+    <!-- Short label describing that a wallpaper has been set to both the home and lock screens of
+         the user's device. [CHAR LIMIT=30] -->
     <string name="home_and_lock_short_label">Dachaigh ⁊ glas</string>
+    <!-- Label for a dialog which lets the user set an image as wallpaper. [CHAR LIMIT=50] -->
     <string name="set_wallpaper_dialog_message">Suidhich am pàipear-balla</string>
+    <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
+         [CHAR LIMIT=100] -->
     <string name="set_wallpaper_home_screen_destination">An sgrìn dachaigh</string>
+    <!-- Label referring to the lock screen of the device, i.e. what is shown when user turns on the
+         device screen. [CHAR LIMIT=100] -->
     <string name="set_wallpaper_lock_screen_destination">An sgrìn-ghlasaidh</string>
+    <!-- Label referring to both the home screen and the lock screen of the
+         device. [CHAR LIMIT=100] -->
     <string name="set_wallpaper_both_destination">An sgrìn dachaigh ’s an sgrìn-ghlasaidh</string>
+    <!-- Label describing a live wallpaper whose responsibility is to display a different wallpaper
+         on a periodic basis (i.e., in a daily rotation). [CHAR LIMIT=80] -->
     <string name="no_backup_image_wallpaper_label">Pàipear-balla de dhealbhan cuairteach</string>
+    <!-- Message explaining to the user that the storage permission is needed to view the current
+         wallpaper. [CHAR LIMIT=none] -->
     <string name="permission_needed_explanation">      Airson am pàipear-balla làithreach a shealltainn an-seo,
  feumaidh      <xliff:g example="Wallpapers" id="app_name">%1$s</xliff:g> stòras an uidheim agad
       inntrigeadh.
     </string>
+    <!-- Message explaining to the user that the storage permission is needed to view the current
+         wallpaper and that they grant it by going to the app's "app info" Settings page.
+         [CHAR LIMIT=none] -->
     <string name="permission_needed_explanation_go_to_settings">      Airson am pàipear-balla làithreach a shealltainn an-seo, feumaidh aplacaid nam pàipearan-balla stòras an uidheim agad
       inntrigeadh.\n\nAirson an roghainn seo atharrachadh, rach gu raon nan roghainnean aig fiosrachadh aplacaid nam pàipearan-balla.
     </string>
+    <!-- Label for the button which, when clicked, requests the storage permission.
+         [CHAR LIMIT=50] -->
     <string name="permission_needed_allow_access_button_label">      Ceadaich inntrigeadh
     </string>
+    <!-- Description of a live wallpaper whose responsibility is to display a different wallpaper
+         on a periodic basis (i.e., in a daily rotation). [CHAR LIMIT=100] -->
     <string name="no_backup_image_wallpaper_description">      Seirbheis phàipearan-balla beòtha airson pàipearan-balla cuairteach
     </string>
+    <!-- Title of a feature where the wallpaper changes on a daily basis. [CHAR LIMIT=50] -->
     <string name="daily_refresh_tile_title">Pàipear-balla làitheil</string>
+    <!-- Label indicating user can tap this tile with their finger to enable the feature.
+         [CHAR LIMIT=100] -->
     <string name="daily_refresh_tile_subtitle">Thoir gnogag gus a chur air</string>
+    <!-- Message indicating that user must tap the "Set wallpaper" button on a subsequent screen
+         to complete setup of the daily wallpaper rotation feature. [CHAR LIMIT=none] -->
     <string name="start_rotation_dialog_body_live_wallpaper_needed">      Atharraichidh am pàipear-balla gach latha. Airson crìoch a chur air an t-suidheachadh, thoir gnogag air
-      &lt;strong&gt;Suidhich am pàipear-balla&lt;/strong&gt; air an ath-sgrìn.
+      <![CDATA[<strong>Suidhich am pàipear-balla</strong>]]> air an ath-sgrìn.
     </string>
+    <!-- Message indicating that, if this box is checked, future wallpapers will be enabled only
+         when the device has Wi-fi enabled. [CHAR LIMIT=100] -->
     <string name="start_rotation_dialog_wifi_only_option_message">      O seo a-mach, luchdaich a-nuas pàipearan-balla air WiFi a-mhàin
     </string>
+    <!-- Label for a button letting the user continue on to enable daily wallpaper rotation.
+         [CHAR LIMIT=30] -->
     <string name="start_rotation_dialog_continue">Lean air adhart</string>
-    <string name="start_rotation_progress_message">A’ luchdachadh a-nuas a’ chiad pàipeir-bhalla…</string>
+    <!-- Message indicating the app is downloading the first wallpaper in a daily rotation.
+         [CHAR LIMIT=100] -->
+    <string name="start_rotation_progress_message">A’ luchdachadh a-nuas a’ chiad pàipeir-bhalla&#8230;</string>
+    <!-- Error message indicating the app could not download the first wallpaper of a daily
+         rotation. [CHAR LIMIT=none] -->
     <string name="start_rotation_error_message">      Cha b’ urrainn dhuinn a’ chiad pàipear-balla a luchdadh a-nuas. Thoir sùil air roghainnean an lìonraidh agad is feuch ris a-rithist.
     </string>
+    <!-- Message explaining to the user that daily rotation means the wallpaper on the device will
+         change daily. [CHAR LIMIT=none] -->
     <string name="start_rotation_dialog_body">      Atharraichidh am pàipear-balla gu fèin-obrachail gach latha
     </string>
+    <!-- Label for a button linking to Android Settings. [CHAR LIMIT=50] -->
     <string name="settings_button_label">      Roghainnean
     </string>
+    <!-- Label for a button allowing user to learn more about a wallpaper [CHAR LIMIT=30] -->
     <string name="explore">Rùraich</string>
+    <!-- Label for a button letting user set the next wallpaper on the device. [CHAR LIMIT=100] -->
     <string name="next_wallpaper">An t-ath phàipear-balla</string>
+    <!-- Message indicating that setting the wallpaper on the device has is disabled
+         [CHAR LIMIT=none] -->
     <string name="wallpaper_disabled_message">        Chaidh suidheachadh pàipeir-bhalla a chur à comas air an uidheam seo
     </string>
+    <!-- Message indicating the administrator of the device has disabled viewing and setting
+         the wallpaper of the device. [CHAR LIMIT=none] -->
     <string name="wallpaper_disabled_by_administrator_message">        Chaidh suidheachadh pàipeir-bhalla a chur à comas le rianaire an uidheim agad
     </string>
+    <!-- Message indicating that the selected wallpaper was successfully set on the device.
+         [CHAR_LIMIT=100] -->
     <string name="wallpaper_set_successfully_message">        Chaidh am pàipear-balla a shuidheachadh
     </string>
+    <!-- Message indicating that the user needs to be connected to the Internet to view the
+         collections of wallpapers.
+         [CHAR_LIMIT=none] -->
     <string name="wallpapers_unavailable_offline_message">        Tha feum agad air ceangal dhan eadar-lìon airson pàipearan-balla a shealltainn. Thoir sùil air a’ cheangal agad is feuch ris a-rithist.\"
     </string>
+    <!-- Content descriptions -->
+    <!-- Content description for a thumbnail showing the currently set home screen wallpaper.
+         [CHAR LIMIT=none] -->
     <string name="currently_set_home_wallpaper_thumbnail">      Dealbhag de phàipear-balla na sgrìn dachaigh a tha ’ga chleachdadh an-dràsta
     </string>
+    <!-- Content description for a thumbnail showing the currently set lock screen wallpaper.
+         [CHAR LIMIT=none] -->
     <string name="currently_set_lock_wallpaper_thumbnail">      Dealbhag de phàipear-balla na sgrìn-ghlasaidh a tha ’ga chleachdadh an-dràsta
     </string>
+    <!-- Content description for a thumbnail showing the currently set wallpaper.
+         [CHAR LIMIT=none] -->
     <string name="currently_set_wallpaper_thumbnail">Dealbhag dhen phàipear-balla a tha ’ga chleachdadh an-dràsta</string>
+    <!-- Content description for a thumbnail image of a wallpaper. [CHAR LIMIT=none] -->
     <string name="wallpaper_thumbnail">Dealbhag dhen phàipear-balla</string>
+    <!-- Content description for a button letting the user learn more about the currently set home
+         screen wallpaper. [CHAR LIMIT=none] -->
     <string name="explore_home_screen">Mu phàipear-balla na sgrìn dachaigh</string>
+    <!-- Content description for a button letting the user learn more about the currently set lock
+         screen wallpaper. [CHAR LIMIT=none] -->
     <string name="explore_lock_screen">Mu phàipear-balla na sgrìn-ghlasaidh</string>
+    <!-- Content description for a button letting the user skip to the next daily wallpaper on the
+         home screen. [CHAR LIMIT=none] -->
     <string name="refresh_daily_wallpaper_home_content_description">Ath-nuadhaich pàipear-balla làitheil na sgrìn dachaigh</string>
+    <!-- Content description for a button letting the user skip to the next daily wallpaper.
+         [CHAR LIMIT=none] -->
     <string name="refresh_daily_wallpaper_content_description">Ath-nuadhaich am pàipear-balla làitheil</string>
-    <string name="refreshing_daily_wallpaper_dialog_message">        Ag ath-nuadhachadh a’ phàipeir-bhalla làitheil…
+    <!-- Message shown to user in a progress dialog when the app is in the process of refreshing the
+         daily wallpaper. [CHAR LIMIT=none] -->
+    <string name="refreshing_daily_wallpaper_dialog_message">        Ag ath-nuadhachadh a’ phàipeir-bhalla làitheil&#8230;
     </string>
+    <!-- Message shown to user in an alert dialog when the app failed to refresh the user's daily
+         wallpaper. The message also suggests the user to check their network settings since network
+         connection issues are a likely cause of the error. [CHAR LIMIT=none] -->
     <string name="refresh_daily_wallpaper_failed_message">        Cha deach leinn am pàipear-balla làitheil ath-nuadhachadh. Thoir sùil air a’ cheangal dhan lìonraidh agad is feuch ris a-rithist.
     </string>
+    <!-- Content -->
+    <!-- Title of the collection of wallpapers stored on the device itself. [CHAR LIMIT=30] -->
     <string name="on_device_wallpapers_category_title">Pàipearan-balla air an uidheim</string>
+    <!-- Short title of the collection of wallpapers stored on the device itself.
+         [CHAR LIMIT=30] -->
     <string name="on_device_wallpapers_category_title_desktop">Air an uidheam</string>
+    <!-- Title of a wallpaper that comes with the Android device. [CHAR LIMIT=30] -->
     <string name="on_device_wallpaper_title">Pàipear-balla Android</string>
+    <!-- Title of the collection of "live" (animated) wallpapers. [CHAR LIMIT=30] -->
     <string name="live_wallpapers_category_title">Pàipearan-balla beòtha</string>
+    <!-- Title of the collection of wallpapers from the user's own photo collection.
+         [CHAR LIMIT=30] -->
     <string name="my_photos_category_title">Na dealbhan agam</string>
+    <!-- Title of a wallpaper that is a user's own photo. [CHAR LIMIT=30] -->
     <string name="my_photos_generic_wallpaper_title">An dealbh agam</string>
+    <!-- Title used for a wallpaper which does not have a unique title. [CHAR LIMIT=30] -->
     <string name="fallback_wallpaper_title">Pàipear-balla</string>
+    <!-- Displayed when user selects a shortcut for an app that was uninstalled [CHAR_LIMIT=none]-->
     <string name="app_not_found">Cha deach an aplacaid a stàladh.</string>
+    <!-- "Center" wallpaper position option where the custom photo wallpaper is centered to the
+         device's desktop without any scaling. [CHAR_LIMIT=30] -->
     <string name="center_wallpaper_position">Sa meadhan</string>
+    <!-- "Center crop" wallpaper position option where the custom photo wallpaper is center cropped
+         to the device's desktop so that the maximum area of the photo is shown without empty space.
+         [CHAR_LIMIT=50] -->
     <string name="center_crop_wallpaper_position">Beàrrte sa mheadhan</string>
+    <!-- "Stretch" wallpaper position option where the custom photo wallpaper is scaled and
+         stretched to fit the device's desktop exactly. [CHAR_LIMIT=30] -->
     <string name="stretch_wallpaper_position">Sìn</string>
+    <!-- Logging -->
+    <!-- Label for a checkbox which lets user preview the displayed image as wallpaper. [CHAR LIMIT=30] -->
     <string name="preview">Ro-sheall</string>
+    <!-- Label for the 'Info' tab of view pager in wallpaper preview activity. [CHAR_LIMIT=25] -->
     <string name="tab_info">Fiosrachadh</string>
+    <!-- Label for the 'Customize' tab of view pager in wallpaper preview activity.
+         [CHAR_LIMIT=25] -->
     <string name="tab_customize">Gnàthaich</string>
+    <!-- List item for configuring the current wallpaper [CHAR LIMIT=30] -->
     <string name="configure_wallpaper">Roghainnean…</string>
+    <!-- List item for deleting the current wallpaper [CHAR LIMIT=30] -->
     <string name="delete_live_wallpaper">Sguab às</string>
+    <!-- Confirmation dialog. Shown after user selects to delete one wallpaper. [CHAR LIMIT=NONE] -->
     <string name="delete_wallpaper_confirmation">A bheil thu airson am pàipear-balla seo a sguabadh às on fhòn agad?</string>
+    <!-- Content description of back button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_back">Air ais</string>
+    <!-- Content description of edit button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_edit">Deasaich</string>
+    <!-- TODO(b/154299462): Separate downloadable related actions from WallpaperPicker. -->
+    <!-- Content description of download button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_download">Luchdaich a-nuas</string>
+    <!-- Content description of "slideshow wallpaper" button on the bottom action bar. [CHAR LIMIT=50] -->
     <string name="bottom_action_bar_slideshow_wallpaper">Pàipear-balla de shleamhnagan</string>
+    <!-- Content description of apply button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_apply">Cuir an sàs</string>
+    <!-- Accessibility label for paging indicator in theme picker preview [CHAR LIMIT=NONE] -->
     <string name="accessibility_preview_pager" msgid="3548503287402185430">Duilleag <xliff:g name="current_page" example="1">%1$d</xliff:g> à <xliff:g name="num_pages" example="2">%2$d</xliff:g></string>
+    <!-- Content description of the next button to bring user to the next preview page.[CHAR LIMIT=NONE] -->
     <string name="next_page_content_description" msgid="5290226604542300962">Air adhart</string>
+    <!-- Content description of the previous button to bring user to the previous preview page. [CHAR LIMIT=NONE] -->
     <string name="previous_page_content_description" msgid="6025726405430262788">Air ais</string>
+    <!--Name of metadata in the main launcher Activity which values contains the authority
+    corresponding to a ContentProvider in launcher to provide available grids and
+    allow for changing them -->
+    <!-- Title of the tool bar in the wallpaper picker. [CHAR LIMIT=19] -->
     <string name="wallpaper_title">Pàipear-balla</string>
+    <!-- Content description of wallpaper preview card. [CHAR_LIMIT=40]-->
     <string name="wallpaper_preview_card_content_description">Ro-shealladh air pàipear-balla</string>
+    <!-- Error message of the wallpaper's collection doesn't exist. [CHAR_LIMIT=NONE] -->
     <string name="collection_not_exist_msg">Chan eil an cruinneachadh ann</string>
 </resources>

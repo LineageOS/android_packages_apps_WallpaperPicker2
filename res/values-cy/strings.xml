@@ -15,84 +15,214 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- The name of this application, a wallpaper picker. [CHAR LIMIT=50] -->
     <string name="wallpaper_app_name">Papurau wal</string>
     <string name="app_name">@string/wallpaper_app_name</string>
+    <!-- UI Strings -->
+    <!-- Label which asks the user to select a wallpaper category from the given choices. [CHAR LIMIT=50] -->
     <string name="select_wallpaper_label">Categorïau papurau wal</string>
+    <!-- Label for a button which lets user set the displayed image as wallpaper. [CHAR LIMIT=30] -->
     <string name="set_wallpaper_button_text">Gosod fel Papur Wal</string>
-    <string name="set_wallpaper_progress_message">Yn gosod fel papur wal…</string>
+    <!-- Message shown in a dialog indicating that the app is setting an image as the device
+         wallpaper. [CHAR LIMIT=100] -->
+    <string name="set_wallpaper_progress_message">Yn gosod fel papur wal&#8230;</string>
+    <!-- Label for a button which lets user try to set the wallpaper again. [CHAR LIMIT=30] -->
     <string name="try_again">Ceisia eto</string>
+    <!-- Error message indicating the app could not successfully set an image as the device
+         wallpaper. [CHAR LIMIT=100] -->
     <string name="set_wallpaper_error_message">Methu â gosod y papur wal.</string>
+    <!-- Error message indicating the app could not load the user-selected wallpaper image for
+         preview. [CHAR LIMIT=100] -->
     <string name="load_wallpaper_error_message">Methu â llwytho papur wal. Mae\'r ddelwedd yn llwgr neu ddim ar gael.</string>
+    <!-- Label indicating that the wallpaper being shown near it is the wallpaper that is currently
+         set on the device. [CHAR LIMIT=100] -->
     <string name="static_wallpaper_presentation_mode_message">Wedi\'i osod ar hyn o bryd</string>
+    <!-- Label indicating that the wallpaper being shown near it is the wallpaper that is currently
+         set on the device and is part of a daily rotation of wallpapers. [CHAR LIMIT=100] -->
     <string name="rotating_wallpaper_presentation_mode_message">Papur wal dyddiol</string>
+    <!-- Label indicating that the wallpaper being shown is set both on home screen and on lock
+        screen [CHAR LIMIT=100] -->
     <string name="wallpaper_destination_both">Sgrinau Cartref a Chloi</string>
+    <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
+         [CHAR LIMIT=30] -->
     <string name="home_screen_message">Sgrin gartref</string>
+    <!-- Label referring to the lock screen of the device, i.e. what is shown when user turns on the
+         device screen. [CHAR LIMIT=30] -->
     <string name="lock_screen_message">Sgrin cloi</string>
+    <!-- Short label describing that a wallpaper has been set to both the home and lock screens of
+         the user's device. [CHAR LIMIT=30] -->
     <string name="home_and_lock_short_label">Cartref a Chloi</string>
+    <!-- Label for a dialog which lets the user set an image as wallpaper. [CHAR LIMIT=50] -->
     <string name="set_wallpaper_dialog_message">Gosod fel papur wal</string>
+    <!-- Label referring to the home screen of the device, i.e. shown behind the launcher.
+         [CHAR LIMIT=100] -->
     <string name="set_wallpaper_home_screen_destination">Sgrin gartref</string>
+    <!-- Label referring to the lock screen of the device, i.e. what is shown when user turns on the
+         device screen. [CHAR LIMIT=100] -->
     <string name="set_wallpaper_lock_screen_destination">Sgrin cloi</string>
+    <!-- Label referring to both the home screen and the lock screen of the
+         device. [CHAR LIMIT=100] -->
     <string name="set_wallpaper_both_destination">Sgrin gartref a sgrin cloi</string>
+    <!-- Label describing a live wallpaper whose responsibility is to display a different wallpaper
+         on a periodic basis (i.e., in a daily rotation). [CHAR LIMIT=80] -->
     <string name="no_backup_image_wallpaper_label">Cylchdroi Delwedd Papur Wal</string>
+    <!-- Message explaining to the user that the storage permission is needed to view the current
+         wallpaper. [CHAR LIMIT=none] -->
     <string name="permission_needed_explanation">I ddangos y papur wal cyfredol yma, mae ar <xliff:g example="Wallpapers" id="app_name">%1$s</xliff:g> angen mynediad at storfa dy ddyfais.</string>
+    <!-- Message explaining to the user that the storage permission is needed to view the current
+         wallpaper and that they grant it by going to the app's "app info" Settings page.
+         [CHAR LIMIT=none] -->
     <string name="permission_needed_explanation_go_to_settings">I ddangos y papur wal cyfredol yma, mae ar Papurau Wal angen mynediad at storfa dy ddyfais.\n\nI newid hyn, gweler adran Caniatâd gwybodaeth yr ap Papurau Wal.</string>
+    <!-- Label for the button which, when clicked, requests the storage permission.
+         [CHAR LIMIT=50] -->
     <string name="permission_needed_allow_access_button_label">Caniatáu mynediad</string>
+    <!-- Description of a live wallpaper whose responsibility is to display a different wallpaper
+         on a periodic basis (i.e., in a daily rotation). [CHAR LIMIT=100] -->
     <string name="no_backup_image_wallpaper_description">Gwasaneth papurau wal byw ar gyfer papurau wal sy\'n cylchdroi</string>
+    <!-- Title of a feature where the wallpaper changes on a daily basis. [CHAR LIMIT=50] -->
     <string name="daily_refresh_tile_title">Papur wal dyddiol</string>
+    <!-- Label indicating user can tap this tile with their finger to enable the feature.
+         [CHAR LIMIT=100] -->
     <string name="daily_refresh_tile_subtitle">Tapia i droi ymlaen</string>
+    <!-- Message indicating that user must tap the "Set wallpaper" button on a subsequent screen
+         to complete setup of the daily wallpaper rotation feature. [CHAR LIMIT=none] -->
     <string name="start_rotation_dialog_body_live_wallpaper_needed">      Bydd y papur wal yn newid yn awtomatig pob dydd. I orffen gosod, tapia 
-      &lt;strong&gt;Gosod papur wal&lt;/strong&gt; ar y sgrin nesaf.
+      <![CDATA[<strong>Gosod papur wal</strong>]]> ar y sgrin nesaf.
     </string>
+    <!-- Message indicating that, if this box is checked, future wallpapers will be enabled only
+         when the device has Wi-fi enabled. [CHAR LIMIT=100] -->
     <string name="start_rotation_dialog_wifi_only_option_message">      Lawrlwytho papurau wal yn y dyfodol dros Wi-Fi yn unig
     </string>
+    <!-- Label for a button letting the user continue on to enable daily wallpaper rotation.
+         [CHAR LIMIT=30] -->
     <string name="start_rotation_dialog_continue">Parhau</string>
-    <string name="start_rotation_progress_message">Yn lawrlwytho\'r papur wal cyntaf…</string>
+    <!-- Message indicating the app is downloading the first wallpaper in a daily rotation.
+         [CHAR LIMIT=100] -->
+    <string name="start_rotation_progress_message">Yn lawrlwytho\'r papur wal cyntaf&#8230;</string>
+    <!-- Error message indicating the app could not download the first wallpaper of a daily
+         rotation. [CHAR LIMIT=none] -->
     <string name="start_rotation_error_message">Methu â lawrlwytho\'r papur wal cyntaf. Gwiria dy osodiadau rhwydwaith a rhoi cynnig arall arni.</string>
+    <!-- Message explaining to the user that daily rotation means the wallpaper on the device will
+         change daily. [CHAR LIMIT=none] -->
     <string name="start_rotation_dialog_body">Bydd y papur wal yn newid yn awtomatig pob dydd.</string>
+    <!-- Label for a button linking to Android Settings. [CHAR LIMIT=50] -->
     <string name="settings_button_label">      Gosodiadau
     </string>
+    <!-- Label for a button allowing user to learn more about a wallpaper [CHAR LIMIT=30] -->
     <string name="explore">Archwilio</string>
+    <!-- Label for a button letting user set the next wallpaper on the device. [CHAR LIMIT=100] -->
     <string name="next_wallpaper">Papur wal nesaf</string>
+    <!-- Message indicating that setting the wallpaper on the device has is disabled
+         [CHAR LIMIT=none] -->
     <string name="wallpaper_disabled_message">Mae gosod papur wal wedi\'i analluogi ar y ddyfais hon.</string>
+    <!-- Message indicating the administrator of the device has disabled viewing and setting
+         the wallpaper of the device. [CHAR LIMIT=none] -->
     <string name="wallpaper_disabled_by_administrator_message">Mae gosod papur wal wedi\'i analluogi gan weinyddwr dy ddyfais.</string>
+    <!-- Message indicating that the selected wallpaper was successfully set on the device.
+         [CHAR_LIMIT=100] -->
     <string name="wallpaper_set_successfully_message">Gosodwyd y papur wal yn llwyddiannus</string>
+    <!-- Message indicating that the user needs to be connected to the Internet to view the
+         collections of wallpapers.
+         [CHAR_LIMIT=none] -->
     <string name="wallpapers_unavailable_offline_message">Rhaid bod wedi cysylltu â\'r rhyngrwyd i weld papurau wal. Cysyllta a rhoi cynnig arall arni.</string>
+    <!-- Content descriptions -->
+    <!-- Content description for a thumbnail showing the currently set home screen wallpaper.
+         [CHAR LIMIT=none] -->
     <string name="currently_set_home_wallpaper_thumbnail">Cryno-lun papur wal y sgrin gartref ar hyn o bryd</string>
+    <!-- Content description for a thumbnail showing the currently set lock screen wallpaper.
+         [CHAR LIMIT=none] -->
     <string name="currently_set_lock_wallpaper_thumbnail">Cryno-lun papur wal y sgrin cloi ar hyn o bryd</string>
+    <!-- Content description for a thumbnail showing the currently set wallpaper.
+         [CHAR LIMIT=none] -->
     <string name="currently_set_wallpaper_thumbnail">Cryno-lun y papur wal a ddefnyddir ar hyn o bryd</string>
+    <!-- Content description for a thumbnail image of a wallpaper. [CHAR LIMIT=none] -->
     <string name="wallpaper_thumbnail">Cryno-lun papur wal</string>
+    <!-- Content description for a button letting the user learn more about the currently set home
+         screen wallpaper. [CHAR LIMIT=none] -->
     <string name="explore_home_screen">Archwilio papur wal sgrin gartref</string>
+    <!-- Content description for a button letting the user learn more about the currently set lock
+         screen wallpaper. [CHAR LIMIT=none] -->
     <string name="explore_lock_screen">Archwilio papur wal sgrin cloi</string>
+    <!-- Content description for a button letting the user skip to the next daily wallpaper on the
+         home screen. [CHAR LIMIT=none] -->
     <string name="refresh_daily_wallpaper_home_content_description">Newid papur wal dyddiol y sgrin cloi</string>
+    <!-- Content description for a button letting the user skip to the next daily wallpaper.
+         [CHAR LIMIT=none] -->
     <string name="refresh_daily_wallpaper_content_description">Newid papur wal dyddiol</string>
-    <string name="refreshing_daily_wallpaper_dialog_message">Yn newid y papur wal dyddiol…</string>
+    <!-- Message shown to user in a progress dialog when the app is in the process of refreshing the
+         daily wallpaper. [CHAR LIMIT=none] -->
+    <string name="refreshing_daily_wallpaper_dialog_message">Yn newid y papur wal dyddiol&#8230;</string>
+    <!-- Message shown to user in an alert dialog when the app failed to refresh the user's daily
+         wallpaper. The message also suggests the user to check their network settings since network
+         connection issues are a likely cause of the error. [CHAR LIMIT=none] -->
     <string name="refresh_daily_wallpaper_failed_message">Methwyd â newid y papur wal dyddiol. Gwiria dy gysylltiad rhwydwaith a cheisio eto.</string>
+    <!-- Content -->
+    <!-- Title of the collection of wallpapers stored on the device itself. [CHAR LIMIT=30] -->
     <string name="on_device_wallpapers_category_title">Papurau wal ar y ddyfais</string>
+    <!-- Short title of the collection of wallpapers stored on the device itself.
+         [CHAR LIMIT=30] -->
     <string name="on_device_wallpapers_category_title_desktop">Ar y ddyfais</string>
+    <!-- Title of a wallpaper that comes with the Android device. [CHAR LIMIT=30] -->
     <string name="on_device_wallpaper_title">Papur wal Android</string>
+    <!-- Title of the collection of "live" (animated) wallpapers. [CHAR LIMIT=30] -->
     <string name="live_wallpapers_category_title">Papurau wal byw</string>
+    <!-- Title of the collection of wallpapers from the user's own photo collection.
+         [CHAR LIMIT=30] -->
     <string name="my_photos_category_title">Fy lluniau</string>
+    <!-- Title of a wallpaper that is a user's own photo. [CHAR LIMIT=30] -->
     <string name="my_photos_generic_wallpaper_title">Fy llun</string>
+    <!-- Title used for a wallpaper which does not have a unique title. [CHAR LIMIT=30] -->
     <string name="fallback_wallpaper_title">Papur wal</string>
+    <!-- Displayed when user selects a shortcut for an app that was uninstalled [CHAR_LIMIT=none]-->
     <string name="app_not_found">Dyw\'r ap heb ei osod.</string>
+    <!-- "Center" wallpaper position option where the custom photo wallpaper is centered to the
+         device's desktop without any scaling. [CHAR_LIMIT=30] -->
     <string name="center_wallpaper_position">Canoli</string>
+    <!-- "Center crop" wallpaper position option where the custom photo wallpaper is center cropped
+         to the device's desktop so that the maximum area of the photo is shown without empty space.
+         [CHAR_LIMIT=50] -->
     <string name="center_crop_wallpaper_position">Canoli a thocio</string>
+    <!-- "Stretch" wallpaper position option where the custom photo wallpaper is scaled and
+         stretched to fit the device's desktop exactly. [CHAR_LIMIT=30] -->
     <string name="stretch_wallpaper_position">Ymestyn</string>
+    <!-- Logging -->
+    <!-- Label for a checkbox which lets user preview the displayed image as wallpaper. [CHAR LIMIT=30] -->
     <string name="preview">Rhagolwg</string>
+    <!-- Label for the 'Info' tab of view pager in wallpaper preview activity. [CHAR_LIMIT=25] -->
     <string name="tab_info">Gwybodaeth</string>
+    <!-- Label for the 'Customize' tab of view pager in wallpaper preview activity.
+         [CHAR_LIMIT=25] -->
     <string name="tab_customize">Addasu</string>
+    <!-- List item for configuring the current wallpaper [CHAR LIMIT=30] -->
     <string name="configure_wallpaper">Gosodiadau…</string>
+    <!-- List item for deleting the current wallpaper [CHAR LIMIT=30] -->
     <string name="delete_live_wallpaper">Dileu</string>
+    <!-- Confirmation dialog. Shown after user selects to delete one wallpaper. [CHAR LIMIT=NONE] -->
     <string name="delete_wallpaper_confirmation">Dileu\u2019r papur wal hwn o dy ffôn?</string>
+    <!-- Content description of back button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_back">Nôl</string>
+    <!-- Content description of edit button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_edit">Golygu</string>
+    <!-- TODO(b/154299462): Separate downloadable related actions from WallpaperPicker. -->
+    <!-- Content description of download button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_download">Lawrlwytho</string>
+    <!-- Content description of "slideshow wallpaper" button on the bottom action bar. [CHAR LIMIT=50] -->
     <string name="bottom_action_bar_slideshow_wallpaper">Papur Wâl Sleidiau</string>
+    <!-- Content description of apply button on the bottom action bar. [CHAR LIMIT=30] -->
     <string name="bottom_action_bar_apply">Gosod</string>
+    <!-- Accessibility label for paging indicator in theme picker preview [CHAR LIMIT=NONE] -->
     <string name="accessibility_preview_pager" msgid="3548503287402185430">Tudalen <xliff:g name="current_page" example="1">%1$d</xliff:g> o <xliff:g name="num_pages" example="2">%2$d</xliff:g></string>
+    <!-- Content description of the next button to bring user to the next preview page.[CHAR LIMIT=NONE] -->
     <string name="next_page_content_description" msgid="5290226604542300962">Nesaf</string>
+    <!-- Content description of the previous button to bring user to the previous preview page. [CHAR LIMIT=NONE] -->
     <string name="previous_page_content_description" msgid="6025726405430262788">Blaenorol</string>
+    <!--Name of metadata in the main launcher Activity which values contains the authority
+    corresponding to a ContentProvider in launcher to provide available grids and
+    allow for changing them -->
+    <!-- Title of the tool bar in the wallpaper picker. [CHAR LIMIT=19] -->
     <string name="wallpaper_title">Papur wal</string>
+    <!-- Content description of wallpaper preview card. [CHAR_LIMIT=40]-->
     <string name="wallpaper_preview_card_content_description">Rhagolwg papur wal</string>
+    <!-- Error message of the wallpaper's collection doesn't exist. [CHAR_LIMIT=NONE] -->
     <string name="collection_not_exist_msg">Dyw\'r casglaiad ddim yn bodoli.</string>
 </resources>

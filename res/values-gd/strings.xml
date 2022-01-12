@@ -49,7 +49,7 @@
     <string name="daily_refresh_tile_title">Pàipear-balla làitheil</string>
     <string name="daily_refresh_tile_subtitle">Thoir gnogag gus a chur air</string>
     <string name="start_rotation_dialog_body_live_wallpaper_needed">      Atharraichidh am pàipear-balla gach latha. Airson crìoch a chur air an t-suidheachadh, thoir gnogag air
-      &lt;strong&gt;Suidhich am pàipear-balla&lt;/strong&gt; air an ath-sgrìn.
+      <![CDATA[<strong>Suidhich am pàipear-balla</strong>]]> air an ath-sgrìn.
     </string>
     <string name="start_rotation_dialog_wifi_only_option_message">      O seo a-mach, luchdaich a-nuas pàipearan-balla air WiFi a-mhàin
     </string>

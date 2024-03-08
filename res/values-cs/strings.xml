@@ -90,7 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Smazat"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Upravit"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Smazat tuto tapetu ze zařízení?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Zpět"</string>
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"Přejít nahoru"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Upravit"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Stáhnout"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Tapeta prezentace"</string>
@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Resetovat změny?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Změny nebudou uloženy"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Více tapet"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"Tapeta %1$s"</string>
 </resources>

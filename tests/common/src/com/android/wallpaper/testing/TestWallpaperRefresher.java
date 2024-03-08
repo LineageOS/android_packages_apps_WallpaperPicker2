@@ -49,30 +49,24 @@ public class TestWallpaperRefresher implements WallpaperRefresher {
                     new WallpaperMetadata(
                             prefs.getHomeWallpaperAttributions(),
                             prefs.getHomeWallpaperActionUrl(),
-                            prefs.getHomeWallpaperActionLabelRes(),
-                            prefs.getHomeWallpaperActionIconRes(),
                             prefs.getHomeWallpaperCollectionId(),
-                            prefs.getHomeWallpaperBackingFileName(),
-                            null /* wallpaperComponent */),
+                            /* wallpaperComponent */ null,
+                            /* cropHints= */ null),
                     new WallpaperMetadata(
                             prefs.getLockWallpaperAttributions(),
                             prefs.getLockWallpaperActionUrl(),
-                            prefs.getLockWallpaperActionLabelRes(),
-                            prefs.getLockWallpaperActionIconRes(),
                             prefs.getLockWallpaperCollectionId(),
-                            prefs.getLockWallpaperBackingFileName(),
-                            null /* wallpaperComponent */),
+                            /* wallpaperComponent */ null,
+                            /* cropHints= */ null),
                     prefs.getWallpaperPresentationMode());
         } else {
             listener.onRefreshed(
                     new WallpaperMetadata(
                             prefs.getHomeWallpaperAttributions(),
                             prefs.getHomeWallpaperActionUrl(),
-                            prefs.getHomeWallpaperActionLabelRes(),
-                            prefs.getHomeWallpaperActionIconRes(),
                             prefs.getHomeWallpaperCollectionId(),
-                            prefs.getHomeWallpaperBackingFileName(),
-                            null /* wallpaperComponent */),
+                            /* wallpaperComponent */ null,
+                            /* cropHints= */ null),
                     null,
                     prefs.getWallpaperPresentationMode());
         }

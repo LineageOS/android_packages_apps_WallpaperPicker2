@@ -90,7 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Löschen"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Bearbeiten"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Diesen Hintergrund von deinem Gerät löschen?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Zurück"</string>
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"Nach oben"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Bearbeiten"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Herunterladen"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Diashowhintergrund"</string>
@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Änderungen zurücksetzen?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Änderungen werden nicht gespeichert."</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Weitere Hintergrundbilder"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"Hintergrund %1$s"</string>
 </resources>

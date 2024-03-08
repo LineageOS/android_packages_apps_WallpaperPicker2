@@ -97,7 +97,8 @@
     <skip />
     <!-- no translation found for delete_wallpaper_confirmation (1905114562243802354) -->
     <skip />
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Back"</string>
+    <!-- no translation found for bottom_action_bar_back (2620581414970740784) -->
+    <skip />
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Edit"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Download"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Slideshow wallpaper"</string>
@@ -150,5 +151,7 @@
     <!-- no translation found for reset_confirmation_dialog_message (888669268626289603) -->
     <skip />
     <!-- no translation found for more_wallpapers (8116268433411881705) -->
+    <skip />
+    <!-- no translation found for recent_wallpaper_label (3996353584371118367) -->
     <skip />
 </resources>

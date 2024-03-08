@@ -15,6 +15,7 @@
  */
 package com.android.wallpaper.module
 
+import android.app.WallpaperColors
 import android.app.WallpaperManager
 import android.content.Context
 import android.content.Intent
@@ -23,15 +24,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
+import com.android.customization.model.color.WallpaperColorResources
 import com.android.wallpaper.config.BaseFlags
-import com.android.wallpaper.dispatchers.BackgroundDispatcher
-import com.android.wallpaper.dispatchers.MainDispatcher
 import com.android.wallpaper.effects.EffectsController
 import com.android.wallpaper.model.CategoryProvider
 import com.android.wallpaper.model.InlinePreviewIntentFactory
 import com.android.wallpaper.model.LiveWallpaperInfo
-import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.module.logging.UserEventLogger
 import com.android.wallpaper.monitor.PerformanceMonitor
 import com.android.wallpaper.network.Requester
 import com.android.wallpaper.network.WallpaperRequester
@@ -43,9 +43,12 @@ import com.android.wallpaper.picker.PreviewActivity
 import com.android.wallpaper.picker.PreviewFragment
 import com.android.wallpaper.picker.ViewOnlyPreviewActivity
 import com.android.wallpaper.picker.customization.data.content.WallpaperClientImpl
+import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperSnapshotRestorer
+import com.android.wallpaper.picker.di.modules.BackgroundDispatcher
+import com.android.wallpaper.picker.di.modules.MainDispatcher
 import com.android.wallpaper.picker.individual.IndividualPickerFragment
 import com.android.wallpaper.picker.undo.data.repository.UndoRepository
 import com.android.wallpaper.picker.undo.domain.interactor.UndoInteractor
@@ -63,6 +66,7 @@ open class WallpaperPicker2Injector
 internal constructor(
     @MainDispatcher private val mainScope: CoroutineScope,
     @BackgroundDispatcher private val bgDispatcher: CoroutineDispatcher,
+    private val userEventLogger: UserEventLogger,
 ) : Injector {
     private var alarmManagerWrapper: AlarmManagerWrapper? = null
     private var bitmapCropper: BitmapCropper? = null
@@ -79,18 +83,17 @@ internal constructor(
     private var performanceMonitor: PerformanceMonitor? = null
     private var requester: Requester? = null
     private var systemFeatureChecker: SystemFeatureChecker? = null
-    private var userEventLogger: UserEventLogger? = null
     private var wallpaperPersister: WallpaperPersister? = null
     @Inject lateinit var prefs: WallpaperPreferences
     private var wallpaperRefresher: WallpaperRefresher? = null
-    private var wallpaperRotationRefresher: WallpaperRotationRefresher? = null
     private var wallpaperStatusChecker: WallpaperStatusChecker? = null
     private var flags: BaseFlags? = null
     private var undoInteractor: UndoInteractor? = null
     private var wallpaperInteractor: WallpaperInteractor? = null
+    @Inject lateinit var injectedWallpaperInteractor: WallpaperInteractor
     private var wallpaperSnapshotRestorer: WallpaperSnapshotRestorer? = null
     private var secureSettingsRepository: SecureSettingsRepository? = null
-    private var wallpaperColorsViewModel: WallpaperColorsViewModel? = null
+    private var wallpaperColorsRepository: WallpaperColorsRepository? = null
     private var previewActivityIntentFactory: InlinePreviewIntentFactory? = null
     private var viewOnlyPreviewActivityIntentFactory: InlinePreviewIntentFactory? = null
 
@@ -238,7 +241,7 @@ internal constructor(
     }
 
     override fun getUserEventLogger(context: Context): UserEventLogger {
-        return userEventLogger ?: NoOpUserEventLogger().also { userEventLogger = it }
+        return userEventLogger
     }
 
     @Synchronized
@@ -246,12 +249,13 @@ internal constructor(
         return wallpaperPersister
             ?: DefaultWallpaperPersister(
                     context.applicationContext,
-                    WallpaperManager.getInstance(context),
+                    WallpaperManager.getInstance(context.applicationContext),
                     getPreferences(context),
                     WallpaperChangedNotifier.getInstance(),
                     getDisplayUtils(context),
                     getBitmapCropper(),
                     getWallpaperStatusChecker(context),
+                    getCurrentWallpaperInfoFactory(context),
                     getFlags().isRefactorSettingWallpaper(),
                 )
                 .also { wallpaperPersister = it }
@@ -268,16 +272,6 @@ internal constructor(
             ?: DefaultWallpaperRefresher(context.applicationContext).also {
                 wallpaperRefresher = it
             }
-    }
-
-    @Synchronized
-    override fun getWallpaperRotationRefresher(): WallpaperRotationRefresher {
-        return wallpaperRotationRefresher
-            ?: WallpaperRotationRefresher { _, listener ->
-                    // Not implemented
-                    listener.onError()
-                }
-                .also { wallpaperRotationRefresher = it }
     }
 
     override fun getWallpaperStatusChecker(context: Context): WallpaperStatusChecker {
@@ -306,6 +300,10 @@ internal constructor(
     }
 
     override fun getWallpaperInteractor(context: Context): WallpaperInteractor {
+        if (getFlags().isMultiCropEnabled() && getFlags().isMultiCropPreviewUiEnabled()) {
+            return injectedWallpaperInteractor
+        }
+
         val appContext = context.applicationContext
         return wallpaperInteractor
             ?: WallpaperInteractor(
@@ -315,8 +313,8 @@ internal constructor(
                             client =
                                 WallpaperClientImpl(
                                     context = appContext,
-                                    infoFactory = getCurrentWallpaperInfoFactory(appContext),
-                                    wallpaperManager = WallpaperManager.getInstance(appContext)
+                                    wallpaperManager = WallpaperManager.getInstance(appContext),
+                                    wallpaperPreferences = getPreferences(appContext),
                                 ),
                             wallpaperPreferences = getPreferences(context = appContext),
                             backgroundDispatcher = bgDispatcher,
@@ -343,9 +341,16 @@ internal constructor(
                 .also { secureSettingsRepository = it }
     }
 
-    override fun getWallpaperColorsViewModel(): WallpaperColorsViewModel {
-        return wallpaperColorsViewModel
-            ?: WallpaperColorsViewModel().also { wallpaperColorsViewModel = it }
+    override fun getWallpaperColorsRepository(): WallpaperColorsRepository {
+        return wallpaperColorsRepository
+            ?: WallpaperColorsRepository().also { wallpaperColorsRepository = it }
+    }
+
+    override fun getWallpaperColorResources(
+        wallpaperColors: WallpaperColors,
+        context: Context
+    ): WallpaperColorResources {
+        return WallpaperColorResources(wallpaperColors)
     }
 
     override fun getMyPhotosIntentProvider(): MyPhotosStarter.MyPhotosIntentProvider {

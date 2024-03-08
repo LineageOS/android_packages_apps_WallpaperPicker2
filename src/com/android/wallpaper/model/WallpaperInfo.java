@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Parcel;
@@ -28,13 +29,14 @@ import android.os.Parcelable;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IntDef;
-import androidx.annotation.StringRes;
 
-import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
+import com.android.wallpaper.model.wallpaper.ScreenOrientation;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -51,6 +53,8 @@ public abstract class WallpaperInfo implements Parcelable {
 
     private PriorityQueue<String> mEffectNames = new PriorityQueue<>();
 
+    protected final HashMap<Integer, String> mCropHints = new HashMap<>();
+
     public WallpaperInfo() {
     }
 
@@ -63,16 +67,6 @@ public abstract class WallpaperInfo implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeParcelable(mColorInfo.getWallpaperColors(), flags);
         parcel.writeInt(mColorInfo.getPlaceholderColor());
-    }
-
-    @DrawableRes
-    public static int getDefaultActionIcon() {
-        return R.drawable.ic_explore_24px;
-    }
-
-    @StringRes
-    public static int getDefaultActionLabel() {
-        return R.string.explore;
     }
 
     public static final int BACKUP_NOT_ALLOWED = 0;
@@ -124,19 +118,6 @@ public abstract class WallpaperInfo implements Parcelable {
      * Returns the icon to use to represent the action link corresponding to
      * {@link #getActionUrl(Context)}
      */
-    @DrawableRes
-    public int getActionIconRes(Context context) {
-        return getDefaultActionIcon();
-    }
-
-    /**
-     * Returns the label to use for the action link corresponding to
-     * {@link #getActionUrl(Context)}
-     */
-    @StringRes
-    public int getActionLabelRes(Context context) {
-        return getDefaultActionLabel();
-    }
 
     /**
      * @param context
@@ -320,6 +301,30 @@ public abstract class WallpaperInfo implements Parcelable {
         return Resources.ID_NULL;
     }
 
+    /** Sets the crop {@link Rect} of each {@link ScreenOrientation} for this wallpaper. */
+    public void setWallpaperCropHints(Map<ScreenOrientation, Rect> cropHints) {
+        if (cropHints == null) {
+            return;
+        }
+
+        cropHints.forEach((orientation, rect) -> {
+            if (rect != null) {
+                mCropHints.put(orientation.ordinal(),
+                        rect.flattenToString());
+            }
+        });
+    }
+
+    /** Returns the crop {@link Rect} of each {@link ScreenOrientation} for this wallpaper. */
+    public Map<ScreenOrientation, Rect> getWallpaperCropHints() {
+        Map<ScreenOrientation, Rect> cropHints = new HashMap<>();
+        mCropHints.forEach(
+                (orientation, rect) -> cropHints.put(
+                        ScreenOrientation.getEntries().get(orientation),
+                        Rect.unflattenFromString(rect)));
+        return cropHints;
+    }
+
     /**
      * Inner class to keep wallpaper colors and placeholder color.
      */
@@ -349,5 +354,9 @@ public abstract class WallpaperInfo implements Parcelable {
         public Integer getPlaceholderColor() {
             return mPlaceholderColor;
         }
+    }
+
+    public ColorInfo getColorInfo() {
+        return mColorInfo;
     }
 }

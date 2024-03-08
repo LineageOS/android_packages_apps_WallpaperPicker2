@@ -16,17 +16,21 @@
 package com.android.wallpaper.model;
 
 import android.app.WallpaperInfo;
+import android.graphics.Rect;
 
 import androidx.annotation.Nullable;
 
+import com.android.wallpaper.model.wallpaper.ScreenOrientation;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * Live wallpaper-specific wrapper for user-facing wallpaper metadata.
  */
 public class LiveWallpaperMetadata extends WallpaperMetadata {
     public LiveWallpaperMetadata(android.app.WallpaperInfo wallpaperComponent) {
-        super(null, null, 0, 0, null, null, wallpaperComponent);
+        super(null, null, null, wallpaperComponent, null);
     }
 
     @Override
@@ -40,28 +44,18 @@ public class LiveWallpaperMetadata extends WallpaperMetadata {
     }
 
     @Override
-    public int getActionLabelRes() {
-        throw new UnsupportedOperationException("Not implemented for live wallpapers");
-    }
-
-    @Override
-    public int getActionIconRes() {
-        throw new UnsupportedOperationException("Not implemented for live wallpapers");
-    }
-
-    @Override
     public String getCollectionId() {
-        throw new UnsupportedOperationException("Not implemented for live wallpapers");
-    }
-
-    @Nullable
-    @Override
-    public String getBackingFileName() {
         throw new UnsupportedOperationException("Not implemented for live wallpapers");
     }
 
     @Override
     public WallpaperInfo getWallpaperComponent() {
         return mWallpaperComponent;
+    }
+
+    @Nullable
+    @Override
+    public Map<ScreenOrientation, Rect> getWallpaperCropHints() {
+        throw new UnsupportedOperationException("Not implemented for live wallpapers");
     }
 }

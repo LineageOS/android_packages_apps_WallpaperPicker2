@@ -25,7 +25,6 @@ import android.view.View;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister;
 
 /**
@@ -51,10 +50,6 @@ class PreviewIndividualHolder extends IndividualHolder implements View.OnClickLi
             Log.w(TAG, "onClick received on VH on finishing Activity");
             return;
         }
-        UserEventLogger eventLogger =
-                InjectorProvider.getInjector().getUserEventLogger(mActivity);
-        eventLogger.logIndividualWallpaperSelected(mWallpaper.getCollectionId(mActivity));
-
         showPreview(mWallpaper);
     }
 

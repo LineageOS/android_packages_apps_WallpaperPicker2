@@ -31,10 +31,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeFalse;
-import static org.junit.Assume.assumeTrue;
 
-import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -51,17 +48,15 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.WallpaperInfo;
-import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperChangedNotifier;
 import com.android.wallpaper.module.WallpaperPersister;
+import com.android.wallpaper.module.logging.TestUserEventLogger;
 import com.android.wallpaper.testing.TestAsset;
 import com.android.wallpaper.testing.TestExploreIntentChecker;
 import com.android.wallpaper.testing.TestInjector;
 import com.android.wallpaper.testing.TestLiveWallpaperInfo;
 import com.android.wallpaper.testing.TestStaticWallpaperInfo;
-import com.android.wallpaper.testing.TestUserEventLogger;
 import com.android.wallpaper.testing.TestWallpaperPersister;
 import com.android.wallpaper.testing.TestWallpaperStatusChecker;
 import com.android.wallpaper.util.ScreenSizeCalculator;
@@ -69,43 +64,50 @@ import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
+import dagger.hilt.android.testing.HiltAndroidRule;
+import dagger.hilt.android.testing.HiltAndroidTest;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Tests for {@link PreviewActivity}.
  */
+@HiltAndroidTest
 @RunWith(AndroidJUnit4.class)
 @MediumTest
 public class PreviewActivityTest {
-
     private static final float FLOAT_ERROR_MARGIN = 0.001f;
     private static final String ACTION_URL = "http://google.com";
 
     private TestStaticWallpaperInfo mTestStaticWallpaper;
     private TestLiveWallpaperInfo mTestLiveWallpaper;
-    private Injector mInjector;
     private TestWallpaperPersister mWallpaperPersister;
     private TestUserEventLogger mEventLogger;
     private TestExploreIntentChecker mExploreIntentChecker;
     private TestWallpaperStatusChecker mWallpaperStatusChecker;
-    private WallpaperManager mWallpaperManager;
 
-    @Rule
-    public ActivityTestRule<PreviewActivity> mActivityRule =
+    private final HiltAndroidRule mHiltRule = new HiltAndroidRule(this);
+    private final ActivityTestRule<PreviewActivity> mActivityRule =
             new ActivityTestRule<>(PreviewActivity.class, false, false);
+    @Rule
+    public RuleChain rules = RuleChain.outerRule(mHiltRule).around(mActivityRule);
+
+    @Inject TestInjector mInjector;
 
     @Before
     public void setUp() {
-
-        mInjector = new TestInjector();
+        mHiltRule.inject();
         InjectorProvider.setInjector(mInjector);
 
         Intents.init();
@@ -133,7 +135,6 @@ public class PreviewActivityTest {
                 mInjector.getExploreIntentChecker(context);
         mWallpaperStatusChecker = (TestWallpaperStatusChecker)
                 mInjector.getWallpaperStatusChecker(context);
-        mWallpaperManager = WallpaperManager.getInstance(context);
     }
 
     @After
@@ -210,8 +211,6 @@ public class PreviewActivityTest {
             assertEquals(1, mEventLogger.getNumWallpaperSetEvents());
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS,
-                    mEventLogger.getLastWallpaperSetResult());
         });
     }
 
@@ -239,8 +238,6 @@ public class PreviewActivityTest {
             assertEquals(1, mEventLogger.getNumWallpaperSetEvents());
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS,
-                    mEventLogger.getLastWallpaperSetResult());
         });
     }
 
@@ -270,8 +267,6 @@ public class PreviewActivityTest {
             assertEquals(1, mEventLogger.getNumWallpaperSetEvents());
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS,
-                    mEventLogger.getLastWallpaperSetResult());
         });
     }
 
@@ -292,8 +287,6 @@ public class PreviewActivityTest {
             onView(withText(R.string.set_wallpaper_error_message)).check(matches(isDisplayed()));
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_FAILURE,
-                    mEventLogger.getLastWallpaperSetResult());
 
             // Set next call to succeed and current wallpaper bitmap should not be null and
             // equals to the mock wallpaper bitmap after clicking "try again".
@@ -332,8 +325,6 @@ public class PreviewActivityTest {
                     matches(isDisplayed()));
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_FAILURE,
-                    mEventLogger.getLastWallpaperSetResult());
 
             // Set next call to succeed and current wallpaper bitmap should not be
             // null and equals to the mock wallpaper bitmap after clicking "try again".
@@ -374,8 +365,6 @@ public class PreviewActivityTest {
             onView(withText(R.string.set_wallpaper_error_message)).check(matches(isDisplayed()));
 
             assertEquals(1, mEventLogger.getNumWallpaperSetResultEvents());
-            assertEquals(UserEventLogger.WALLPAPER_SET_RESULT_FAILURE,
-                    mEventLogger.getLastWallpaperSetResult());
 
             // Set next call to succeed and current wallpaper bitmap should not be null and
             // equals to the mock wallpaper bitmap after clicking "try again".
@@ -451,21 +440,7 @@ public class PreviewActivityTest {
     }
 
     @Test
-    public void testDestinationOptions_singleEngine_setLive_doesNotShowLockOption() {
-        assumeFalse(mWallpaperManager.isLockscreenLiveWallpaperEnabled());
-        launchActivityIntentWithWallpaper(mTestLiveWallpaper);
-        mWallpaperStatusChecker.setHomeStaticWallpaperSet(true);
-        mWallpaperStatusChecker.setLockWallpaperSet(false);
-
-        onView(withId(R.id.button_set_wallpaper)).perform(click());
-
-        onView(withText(R.string.set_wallpaper_lock_screen_destination)).inRoot(isDialog())
-                .check(matches(not(isDisplayed())));
-    }
-
-    @Test
     public void testDestinationOptions_multiEngine_setLive_showsLockOption() {
-        assumeTrue(mWallpaperManager.isLockscreenLiveWallpaperEnabled());
         launchActivityIntentWithWallpaper(mTestLiveWallpaper);
         mWallpaperStatusChecker.setHomeStaticWallpaperSet(true);
         mWallpaperStatusChecker.setLockWallpaperSet(false);

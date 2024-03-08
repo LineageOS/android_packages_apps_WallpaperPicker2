@@ -15,7 +15,6 @@
  */
 package com.android.wallpaper.picker.preview.ui
 
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
@@ -23,17 +22,25 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.module.InjectorProvider
-import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.testing.TestInjector
 import com.android.wallpaper.testing.TestStaticWallpaperInfo
 import com.google.common.truth.Truth.assertThat
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import javax.inject.Inject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@HiltAndroidTest
 @MediumTest
 @RunWith(AndroidJUnit4::class)
 class WallpaperPreviewActivityTest {
+    @get:Rule var hiltRule = HiltAndroidRule(this)
+
+    @Inject lateinit var testInjector: TestInjector
+
     private val testStaticWallpaper =
         TestStaticWallpaperInfo(TestStaticWallpaperInfo.COLOR_DEFAULT).setWallpaperAttributions()
     private val activityStartIntent =
@@ -45,7 +52,8 @@ class WallpaperPreviewActivityTest {
 
     @Before
     fun setUp() {
-        InjectorProvider.setInjector(TestInjector())
+        hiltRule.inject()
+        InjectorProvider.setInjector(testInjector)
     }
 
     @Test
@@ -57,19 +65,6 @@ class WallpaperPreviewActivityTest {
             val previews =
                 activity.supportFragmentManager.fragments.filterIsInstance<NavHostFragment>()
             assertThat(previews).hasSize(1)
-        }
-    }
-
-    @Test
-    fun launchActivity_setsWallpaperInfo() {
-        val scenario: ActivityScenario<WallpaperPreviewActivity> =
-            ActivityScenario.launch(activityStartIntent)
-
-        scenario.onActivity { activity ->
-            val provider = ViewModelProvider(activity)
-            val viewModel = provider[WallpaperPreviewViewModel::class.java]
-
-            assertThat(viewModel.editingWallpaper).isEqualTo(testStaticWallpaper)
         }
     }
 

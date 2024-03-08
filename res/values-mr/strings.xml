@@ -90,7 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"हटवा"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"संपादित करा"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"तुमच्या डिव्हाइसवरून हा वॉलपेपर हटवायचा आहे का?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"मागे जा"</string>
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"वर नेव्हिगेट करा"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"संपादित करा"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"डाउनलोड करा"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"स्लाइडशो वॉलपेपर"</string>
@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"बदल रीसेट करायचे आहेत का?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"तुमचे बदल सेव्ह केले जाणार नाहीत"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"अधिक वॉलपेपर"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"वॉलपेपर %1$s"</string>
 </resources>

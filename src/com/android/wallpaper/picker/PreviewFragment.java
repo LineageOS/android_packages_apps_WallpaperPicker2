@@ -20,6 +20,7 @@ import static android.view.View.VISIBLE;
 import static com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_LAUNCHER;
 import static com.android.wallpaper.util.LaunchSourceUtils.LAUNCH_SOURCE_SETTINGS_HOMEPAGE;
 import static com.android.wallpaper.util.LaunchSourceUtils.WALLPAPER_LAUNCH_SOURCE;
+import static com.android.wallpaper.widget.FloatingSheet.INFORMATION;
 
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED;
 import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_HIDDEN;
@@ -61,16 +62,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.customization.model.color.WallpaperColorResources;
 import com.android.wallpaper.R;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.SetWallpaperViewModel;
 import com.android.wallpaper.model.WallpaperInfo;
 import com.android.wallpaper.module.Injector;
 import com.android.wallpaper.module.InjectorProvider;
-import com.android.wallpaper.module.UserEventLogger;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperSetter;
+import com.android.wallpaper.module.logging.UserEventLogger;
 import com.android.wallpaper.util.PreviewUtils;
 import com.android.wallpaper.util.ResourceUtils;
 import com.android.wallpaper.widget.DuoTabs;
@@ -226,7 +226,7 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         mUserEventLogger = injector.getUserEventLogger(appContext);
         mWallpaperSetter = new WallpaperSetter(injector.getWallpaperPersister(appContext),
                 injector.getPreferences(appContext), mUserEventLogger,
-                injector.getCurrentWallpaperInfoFactory(appContext), false);
+                injector.getCurrentWallpaperInfoFactory(appContext));
         mViewModelProvider = new ViewModelProvider(requireActivity());
         mSetWallpaperViewModel = mViewModelProvider.get(SetWallpaperViewModel.class);
         mSetWallpaperViewModel.getStatus().observe(requireActivity(), setWallpaperStatus -> {
@@ -301,7 +301,7 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         setUpFloatingSheet(requireContext());
         mWallpaperControlButtonGroup.showButton(WallpaperControlButtonGroup.INFORMATION,
                 getFloatingSheetControlButtonChangeListener(WallpaperControlButtonGroup.INFORMATION,
-                        FloatingSheet.INFORMATION));
+                        INFORMATION));
         mPreviewScrim = view.findViewById(R.id.preview_scrim);
         mExitFullPreviewButton = view.findViewById(R.id.exit_full_preview_button);
         mExitFullPreviewButton.setOnClickListener(v -> toggleWallpaperPreviewControl());
@@ -365,7 +365,7 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         mHideFloatingSheetTouchLayout.setVisibility(View.GONE);
         mFloatingSheet.addFloatingSheetCallback(mStandardFloatingSheetCallback);
         mFloatingSheet.addFloatingSheetCallback(mShowOverlayOnHideFloatingSheetCallback);
-        mFloatingSheet.putFloatingSheetContent(FloatingSheet.INFORMATION,
+        mFloatingSheet.putFloatingSheetContent(INFORMATION,
                 new WallpaperInfoContent(context, mWallpaper));
     }
 
@@ -377,7 +377,11 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
                 mWallpaperControlButtonGroup.deselectOtherFloatingSheetControlButtons(
                         wallpaperType);
                 if (mFloatingSheet.isFloatingSheetCollapsed()) {
-                    hideScreenPreviewOverlay(/* hide= */true);
+                    if (floatingSheetType == INFORMATION) {
+                        hideScreenPreviewOverlayKeepScrim();
+                    } else {
+                        hideScreenPreviewOverlay(/* hide= */true);
+                    }
                     mFloatingSheet.updateContentView(floatingSheetType);
                     mFloatingSheet.expand();
                 } else {
@@ -436,7 +440,7 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
         }
         // Apply the wallpaper color resources to the fragment context. So the views created by
         // the context will apply the given wallpaper color.
-        new WallpaperColorResources(colors).apply(context);
+        InjectorProvider.getInjector().getWallpaperColorResources(colors, context).apply(context);
         mSetWallpaperButton.setBackground(null);
         mSetWallpaperButton.setBackgroundResource(R.drawable.set_wallpaper_button_background);
         mExitFullPreviewButton.setForeground(
@@ -518,6 +522,18 @@ public abstract class PreviewFragment extends Fragment implements WallpaperColor
             mWorkspaceSurface.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
             mWorkspaceSurface.setZOrderMediaOverlay(!hide);
         }
+    }
+
+    /**
+     * Hides or shows the overlay but leaves the scrim always visible.
+     */
+    private void hideScreenPreviewOverlayKeepScrim() {
+        mPreviewScrim.setVisibility(VISIBLE);
+        mOverlayTabs.setVisibility(View.INVISIBLE);
+        boolean isLockSelected = mOverlayTabs.getSelectedTab() == DuoTabs.TAB_PRIMARY;
+        SurfaceView targetSurface = isLockSelected ? mLockSurface : mWorkspaceSurface;
+        targetSurface.setVisibility(View.INVISIBLE);
+        targetSurface.setZOrderMediaOverlay(false);
     }
 
     protected void onSetWallpaperSuccess() {

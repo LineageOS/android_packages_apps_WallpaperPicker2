@@ -280,8 +280,9 @@ public class CreativeWallpaperInfo extends LiveWallpaperInfo {
     }
 
     @Override
-    public boolean isApplied(WallpaperInfo currentWallpaper) {
-        return super.isApplied(currentWallpaper) && mIsCurrent;
+    public boolean isApplied(@Nullable WallpaperInfo currentHomeWallpaper,
+            @Nullable WallpaperInfo currentLockWallpaper) {
+        return super.isApplied(currentHomeWallpaper, currentLockWallpaper) && mIsCurrent;
     }
 
     /**
@@ -408,8 +409,8 @@ public class CreativeWallpaperInfo extends LiveWallpaperInfo {
      * @return an object of type CreativeWallpaperInfo
      */
     @NonNull
-    public static CreativeWallpaperInfo buildFromCursor(
-            android.app.WallpaperInfo wallpaperInfo, Cursor cursor) {
+    public static CreativeWallpaperInfo buildFromCursor(WallpaperInfo wallpaperInfo,
+            Cursor cursor) {
         String wallpaperTitle = cursor.getString(
                 cursor.getColumnIndex(WallpaperInfoContract.WALLPAPER_TITLE));
         String wallpaperAuthor = null;
@@ -471,5 +472,49 @@ public class CreativeWallpaperInfo extends LiveWallpaperInfo {
         }
         return CreativeCategory.saveCreativeCategoryWallpaper(
                 context, this, saveWallpaperUri, destination);
+    }
+
+    public Uri getConfigPreviewUri() {
+        return mConfigPreviewUri;
+    }
+
+    public Uri getCleanPreviewUri() {
+        return mCleanPreviewUri;
+    }
+
+    public Uri getDeleteUri() {
+        return mDeleteUri;
+    }
+
+    public Uri getThumbnailUri() {
+        return mThumbnailUri;
+    }
+
+    public Uri getShareUri() {
+        return mShareUri;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public String getAuthor() {
+        return mAuthor;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    public String getContentDescription() {
+        return mContentDescription;
+    }
+
+    public boolean isCurrent() {
+        return mIsCurrent;
+    }
+
+    public String getGroupName() {
+        return mGroupName;
     }
 }

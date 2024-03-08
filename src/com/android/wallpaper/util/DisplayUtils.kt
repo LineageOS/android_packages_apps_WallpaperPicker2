@@ -30,6 +30,9 @@ import kotlin.math.min
 /**
  * Utility class to provide methods to find and obtain information about displays via {@link
  * DisplayManager}
+ *
+ * Always pass [Context] or [Display] for the current display, instead of using the context in this
+ * class, which is fine for stateless info.
  */
 class DisplayUtils(private val context: Context) {
     companion object {
@@ -68,7 +71,7 @@ class DisplayUtils(private val context: Context) {
      * (portrait).
      */
     fun isUnfoldedHorizontalHinge(activity: Activity): Boolean {
-        return activity.display.rotation in ROTATION_HORIZONTAL_HINGE &&
+        return activity.display?.rotation in ROTATION_HORIZONTAL_HINGE &&
             isOnWallpaperDisplay(activity) &&
             hasMultiInternalDisplays()
     }
@@ -106,19 +109,33 @@ class DisplayUtils(private val context: Context) {
      * For single display device, this is always true.
      */
     fun isOnWallpaperDisplay(activity: Activity): Boolean {
-        return activity.display.uniqueId == getWallpaperDisplay().uniqueId
+        return activity.display?.uniqueId == getWallpaperDisplay().uniqueId
+    }
+
+    /** Gets the real width and height of the display. */
+    fun getRealSize(display: Display): Point {
+        val displayInfo = DisplayInfo()
+        display.getDisplayInfo(displayInfo)
+        return Point(displayInfo.logicalWidth, displayInfo.logicalHeight)
+    }
+
+    /**
+     * Returns the smallest display on a device
+     *
+     * For foldable devices, this method will return the outer display or the primary display when
+     * the device is folded. This is always the smallest display in foldable devices.
+     */
+    fun getSmallerDisplay(): Display {
+        val internalDisplays = getInternalDisplays()
+        var largestDisplay = getWallpaperDisplay()
+        val smallestDisplay = internalDisplays.firstOrNull() { it != largestDisplay }
+        return smallestDisplay ?: largestDisplay
     }
 
     private fun getRealArea(display: Display): Int {
         val displayInfo = DisplayInfo()
         display.getDisplayInfo(displayInfo)
         return displayInfo.logicalHeight * displayInfo.logicalWidth
-    }
-
-    private fun getRealSize(display: Display): Point {
-        val displayInfo = DisplayInfo()
-        display.getDisplayInfo(displayInfo)
-        return Point(displayInfo.logicalWidth, displayInfo.logicalHeight)
     }
 
     private fun getInternalDisplays(): List<Display> {

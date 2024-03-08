@@ -20,37 +20,37 @@ import android.content.Context
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClient
 import com.android.systemui.shared.customization.data.content.CustomizationProviderClientImpl
 import com.android.systemui.shared.customization.data.content.CustomizationProviderContract as Contract
+import com.android.wallpaper.Flags.multiCropPreviewUiFlag
+import com.android.wallpaper.Flags.refactorWallpaperCategoryFlag
+import com.android.wallpaper.Flags.wallpaperRestorerFlag
 import com.android.wallpaper.module.InjectorProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 abstract class BaseFlags {
-    var customizationProviderClient: CustomizationProviderClient? = null
+    private var customizationProviderClient: CustomizationProviderClient? = null
     private var cachedFlags: List<CustomizationProviderClient.Flag>? = null
     open fun isStagingBackdropContentEnabled() = false
     open fun isWallpaperEffectEnabled() = false
     open fun isWallpaperEffectModelDownloadEnabled() = true
     open fun isInterruptModelDownloadEnabled() = false
+    open fun isWallpaperRestorerEnabled() = wallpaperRestorerFlag()
+    open fun isWallpaperCategoryRefactoringEnabled() = refactorWallpaperCategoryFlag()
 
-    // TODO(b/285047815): Remove flag after adding wallpaper id for default static wallpaper
-    open fun isWallpaperRestorerEnabled() = false
-
-    /**
-     * Enables new preview UI if both [isMultiCropEnabled] and this flag are true.
-     *
-     * TODO(b/291761856): Create SysUI flag for new preview UI
-     */
-    open fun isMultiCropPreviewUiEnabled() = false
+    /** Enables new preview UI if both [isMultiCropEnabled] and this flag are true. */
+    open fun isMultiCropPreviewUiEnabled() = multiCropPreviewUiFlag()
 
     open fun isMultiCropEnabled() = WallpaperManager.isMultiCropEnabled()
 
-    open fun isUseRevampedUiEnabled(context: Context): Boolean {
+    open fun isKeyguardQuickAffordanceEnabled(context: Context): Boolean {
         return getCachedFlags(context)
             .firstOrNull { flag ->
-                flag.name == Contract.FlagsTable.FLAG_NAME_REVAMPED_WALLPAPER_UI
+                flag.name ==
+                    Contract.FlagsTable.FLAG_NAME_CUSTOM_LOCK_SCREEN_QUICK_AFFORDANCES_ENABLED
             }
             ?.value == true
     }
+
     open fun isCustomClocksEnabled(context: Context): Boolean {
         return getCachedFlags(context)
             .firstOrNull { flag ->
@@ -58,6 +58,7 @@ abstract class BaseFlags {
             }
             ?.value == true
     }
+
     open fun isMonochromaticThemeEnabled(context: Context): Boolean {
         return getCachedFlags(context)
             .firstOrNull { flag -> flag.name == Contract.FlagsTable.FLAG_NAME_MONOCHROMATIC_THEME }
@@ -111,15 +112,6 @@ abstract class BaseFlags {
             ?: CustomizationProviderClientImpl(context.applicationContext, Dispatchers.IO).also {
                 customizationProviderClient = it
             }
-    }
-
-    fun isQuickAffordancesEnabled(context: Context): Boolean {
-        return getCachedFlags(context)
-            .firstOrNull { flag ->
-                flag.name ==
-                    Contract.FlagsTable.FLAG_NAME_CUSTOM_LOCK_SCREEN_QUICK_AFFORDANCES_ENABLED
-            }
-            ?.value == true
     }
 
     open fun getCachedFlags(context: Context): List<CustomizationProviderClient.Flag> {

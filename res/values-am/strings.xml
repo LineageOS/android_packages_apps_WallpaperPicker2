@@ -90,7 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"ሰርዝ"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"አርትዕ"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"ይህ ልጣፍ ከመሣሪያዎ ይሰረዝ?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"ተመለስ"</string>
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"ወደ ላይ አስስ"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"አርትዕ"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"አውርድ"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"የተንሸራታች ትዕይንት ልጣፍ"</string>
@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"ለውጦች ዳግም ይጀመሩ?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"የእርስዎ ለውጦች አይቀመጡም"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"ተጨማሪ ልጣፎች"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"ልጣፍ %1$s"</string>
 </resources>

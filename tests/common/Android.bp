@@ -25,13 +25,13 @@ android_library {
 
     defaults: ["WallpaperPicker2_common_defaults"],
     srcs: [
-        "src/com/android/wallpaper/testing/**/*.java",
-        "src/com/android/wallpaper/testing/**/*.kt",
+        "src/**/*.java",
+        "src/**/*.kt",
     ],
     static_libs: [
         "androidx.annotation_annotation",
         "kotlinx_coroutines_test",
-        "truth-prebuilt",
+        "truth",
     ],
 
     platform_apis: true,

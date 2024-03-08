@@ -16,12 +16,14 @@
 package com.android.wallpaper.model;
 
 import android.app.WallpaperInfo;
+import android.graphics.Rect;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
+
+import com.android.wallpaper.model.wallpaper.ScreenOrientation;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Lightweight wrapper for user-facing wallpaper metadata.
@@ -31,23 +33,16 @@ public class WallpaperMetadata {
     private final List<String> mAttributions;
     private final String mActionUrl;
     private final String mCollectionId;
-    private final String mBackingFileName;
+    @Nullable private final Map<ScreenOrientation, Rect> mCropHints;
     protected final android.app.WallpaperInfo mWallpaperComponent;
-    @StringRes private final int mActionLabelRes;
-    @DrawableRes private final int mActionIconRes;
 
-    public WallpaperMetadata(List<String> attributions, String actionUrl,
-                             @StringRes int actionLabelRes,
-                             @DrawableRes int actionIconRes, String collectionId,
-                             String backingFileName,
-                             android.app.WallpaperInfo wallpaperComponent) {
+    public WallpaperMetadata(List<String> attributions, String actionUrl, String collectionId,
+            android.app.WallpaperInfo wallpaperComponent, Map<ScreenOrientation, Rect> cropHints) {
         mAttributions = attributions;
         mActionUrl = actionUrl;
-        mActionLabelRes = actionLabelRes;
-        mActionIconRes = actionIconRes;
         mCollectionId = collectionId;
-        mBackingFileName = backingFileName;
         mWallpaperComponent = wallpaperComponent;
+        mCropHints = cropHints;
     }
 
     /**
@@ -65,35 +60,10 @@ public class WallpaperMetadata {
     }
 
     /**
-     * Returns the wallpaper's action label.
-     */
-    @StringRes
-    public int getActionLabelRes() {
-        return mActionLabelRes;
-    }
-
-    /**
-     * Returns the wallpaper's action icon.
-     */
-    @DrawableRes
-    public int getActionIconRes() {
-        return mActionIconRes;
-    }
-
-    /**
      * Returns the wallpaper's collection ID or null if there is none.
      */
     public String getCollectionId() {
         return mCollectionId;
-    }
-
-    /**
-     * Returns the name of a private file corresponding to a copy of the full image used as
-     * wallpaper if this is a static wallpaper.
-     */
-    @Nullable
-    public String getBackingFileName() {
-        return mBackingFileName;
     }
 
     /**
@@ -102,5 +72,15 @@ public class WallpaperMetadata {
      */
     public WallpaperInfo getWallpaperComponent() {
         throw new UnsupportedOperationException("Not implemented for static wallpapers");
+    }
+
+    /**
+     * Returns the crop {@link Rect} of each {@link ScreenOrientation} for this wallpaper.
+     *
+     * <p>Live wallpaper metadata should return null.
+     */
+    @Nullable
+    public Map<ScreenOrientation, Rect> getWallpaperCropHints() {
+        return mCropHints;
     }
 }

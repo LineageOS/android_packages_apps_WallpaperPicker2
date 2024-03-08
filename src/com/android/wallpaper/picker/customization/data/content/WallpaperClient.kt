@@ -18,6 +18,10 @@
 package com.android.wallpaper.picker.customization.data.content
 
 import android.graphics.Bitmap
+import android.graphics.Rect
+import com.android.wallpaper.model.wallpaper.ScreenOrientation
+import com.android.wallpaper.model.wallpaper.WallpaperModel.StaticWallpaperModel
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
 import com.android.wallpaper.picker.customization.shared.model.WallpaperModel
 import kotlinx.coroutines.flow.Flow
@@ -32,20 +36,44 @@ interface WallpaperClient {
     ): Flow<List<WallpaperModel>>
 
     /**
-     * Asynchronously sets the wallpaper to the one with the given ID.
+     * Asynchronously sets a static wallpaper.
      *
+     * @param setWallpaperEntryPoint The entry point where we set the wallpaper from.
+     * @param destination The screen to set the wallpaper on.
+     * @param wallpaperModel The wallpaper model of the wallpaper.
+     * @param bitmap The bitmap of the static wallpaper. Note that the bitmap should be the
+     *   original, full-size bitmap.
+     * @param cropHints The crop hints that indicate how the wallpaper should be cropped and render
+     *   on the designated screen and orientation.
+     * @param onDone A callback to invoke when setting is done.
+     */
+    suspend fun setStaticWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
+        destination: WallpaperDestination,
+        wallpaperModel: StaticWallpaperModel,
+        bitmap: Bitmap,
+        cropHints: Map<ScreenOrientation, Rect>,
+        onDone: () -> Unit,
+    )
+
+    /**
+     * Asynchronously sets a recent wallpaper selected from the wallpaper quick switcher. The recent
+     * wallpaper must have a wallpaper ID.
+     *
+     * @param setWallpaperEntryPoint The entry point where we set the wallpaper from.
      * @param destination The screen to set the wallpaper on.
      * @param wallpaperId The ID of the wallpaper to set.
      * @param onDone A callback to invoke when setting is done.
      */
-    suspend fun setWallpaper(
+    suspend fun setRecentWallpaper(
+        @SetWallpaperEntryPoint setWallpaperEntryPoint: Int,
         destination: WallpaperDestination,
         wallpaperId: String,
-        onDone: () -> Unit
+        onDone: () -> Unit,
     )
 
-    /** Returns a thumbnail for the wallpaper with the given ID. */
-    suspend fun loadThumbnail(wallpaperId: String): Bitmap?
+    /** Returns a thumbnail for the wallpaper with the given ID and destination. */
+    suspend fun loadThumbnail(wallpaperId: String, destination: WallpaperDestination): Bitmap?
 
     /** Returns whether the recent wallpapers provider is available. */
     fun areRecentsAvailable(): Boolean

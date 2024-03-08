@@ -31,12 +31,12 @@ import androidx.lifecycle.lifecycleScope
 import com.android.systemui.shared.clocks.shared.model.ClockPreviewConstants
 import com.android.wallpaper.R
 import com.android.wallpaper.model.CustomizationSectionController
-import com.android.wallpaper.model.WallpaperColorsViewModel
 import com.android.wallpaper.model.WallpaperInfo
 import com.android.wallpaper.model.WallpaperPreviewNavigator
 import com.android.wallpaper.module.CurrentWallpaperInfoFactory
 import com.android.wallpaper.module.CustomizationSections
 import com.android.wallpaper.picker.FixedWidthDisplayRatioFrameLayout
+import com.android.wallpaper.picker.customization.data.repository.WallpaperColorsRepository
 import com.android.wallpaper.picker.customization.domain.interactor.WallpaperInteractor
 import com.android.wallpaper.picker.customization.ui.binder.ScreenPreviewBinder
 import com.android.wallpaper.picker.customization.ui.viewmodel.CustomizationPickerViewModel
@@ -56,7 +56,7 @@ open class ScreenPreviewSectionController(
     private val lifecycleOwner: LifecycleOwner,
     private val screen: CustomizationSections.Screen,
     private val wallpaperInfoFactory: CurrentWallpaperInfoFactory,
-    private val colorViewModel: WallpaperColorsViewModel,
+    private val colorViewModel: WallpaperColorsRepository,
     private val displayUtils: DisplayUtils,
     private val wallpaperPreviewNavigator: WallpaperPreviewNavigator,
     private val wallpaperInteractor: WallpaperInteractor,
@@ -116,7 +116,7 @@ open class ScreenPreviewSectionController(
             .requireViewById<ScreenPreviewClickView>(R.id.screen_preview_click_view)
             .setOnPreviewClickedListener {
                 lifecycleOwner.lifecycleScope.launch {
-                    getWallpaperInfo()?.let { wallpaperInfo ->
+                    getWallpaperInfo(context)?.let { wallpaperInfo ->
                         wallpaperPreviewNavigator.showViewOnlyPreview(
                             wallpaperInfo,
                             /* isAssetIdPresent= */ false,
@@ -146,9 +146,6 @@ open class ScreenPreviewSectionController(
                 offsetToStart = displayUtils.isSingleDisplayOrUnfoldedHorizontalHinge(activity),
                 onWallpaperPreviewDirty = { activity.recreate() },
                 animationStateViewModel = customizationPickerViewModel,
-                onWorkspacePreviewDirty = {
-                    bindScreenPreview(previewView, context, isWallpaperAlwaysVisible)
-                },
                 isWallpaperAlwaysVisible = isWallpaperAlwaysVisible,
             )
     }
@@ -176,21 +173,21 @@ open class ScreenPreviewSectionController(
             wallpaperInfoProvider = { forceReload ->
                 suspendCancellableCoroutine { continuation ->
                     wallpaperInfoFactory.createCurrentWallpaperInfos(
-                        { homeWallpaper, lockWallpaper, _ ->
-                            val wallpaper =
-                                if (isOnLockScreen) {
-                                    lockWallpaper ?: homeWallpaper
-                                } else {
-                                    homeWallpaper ?: lockWallpaper
-                                }
-                            loadInitialColors(
-                                context = context,
-                                screen = screen,
-                            )
-                            continuation.resume(wallpaper, null)
-                        },
+                        context,
                         forceReload,
-                    )
+                    ) { homeWallpaper, lockWallpaper, _ ->
+                        val wallpaper =
+                            if (isOnLockScreen) {
+                                lockWallpaper ?: homeWallpaper
+                            } else {
+                                homeWallpaper ?: lockWallpaper
+                            }
+                        loadInitialColors(
+                            context = context,
+                            screen = screen,
+                        )
+                        continuation.resume(wallpaper, null)
+                    }
                 }
             },
             onWallpaperColorChanged = { colors ->
@@ -231,21 +228,21 @@ open class ScreenPreviewSectionController(
         }
     }
 
-    private suspend fun getWallpaperInfo(): WallpaperInfo? {
+    private suspend fun getWallpaperInfo(context: Context): WallpaperInfo? {
         return suspendCancellableCoroutine { continuation ->
             wallpaperInfoFactory.createCurrentWallpaperInfos(
-                { homeWallpaper, lockWallpaper, _ ->
-                    continuation.resume(
-                        if (isOnLockScreen) {
-                            lockWallpaper ?: homeWallpaper
-                        } else {
-                            homeWallpaper
-                        },
-                        null
-                    )
-                },
-                /* forceRefresh= */ true,
-            )
+                context,
+                true,
+            ) { homeWallpaper, lockWallpaper, _ ->
+                continuation.resume(
+                    if (isOnLockScreen) {
+                        lockWallpaper ?: homeWallpaper
+                    } else {
+                        homeWallpaper
+                    },
+                    null
+                )
+            }
         }
     }
 

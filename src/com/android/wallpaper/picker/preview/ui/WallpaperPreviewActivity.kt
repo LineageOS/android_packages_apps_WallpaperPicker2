@@ -22,14 +22,19 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
 import com.android.wallpaper.R
 import com.android.wallpaper.model.WallpaperInfo
+import com.android.wallpaper.model.wallpaper.WallpaperModel
 import com.android.wallpaper.picker.AppbarFragment
 import com.android.wallpaper.picker.BasePreviewActivity
+import com.android.wallpaper.picker.preview.data.repository.WallpaperPreviewRepository
 import com.android.wallpaper.picker.preview.ui.viewmodel.WallpaperPreviewViewModel
 import com.android.wallpaper.util.ActivityUtils
 import com.android.wallpaper.util.DisplayUtils
+import com.android.wallpaper.util.converter.WallpaperModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 /** This activity holds the flow for the preview screen. */
@@ -37,15 +42,22 @@ import javax.inject.Inject
 class WallpaperPreviewActivity :
     Hilt_WallpaperPreviewActivity(), AppbarFragment.AppbarFragmentHost {
     private val viewModel: WallpaperPreviewViewModel by viewModels()
+    @ApplicationContext @Inject lateinit var appContext: Context
     @Inject lateinit var displayUtils: DisplayUtils
+    @Inject lateinit var wallpaperModelFactory: WallpaperModelFactory
+    @Inject lateinit var wallpaperPreviewRepository: WallpaperPreviewRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.navigationBarColor = Color.TRANSPARENT
         window.statusBarColor = Color.TRANSPARENT
         setContentView(R.layout.activity_wallpaper_preview)
-        viewModel.editingWallpaper =
-            intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java)
+        // Fits screen to navbar and statusbar
+        WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
+        val wallpaper =
+            checkNotNull(intent.getParcelableExtra(EXTRA_WALLPAPER_INFO, WallpaperInfo::class.java))
+                .convertToWallpaperModel()
+        wallpaperPreviewRepository.setWallpaperModel(wallpaper)
     }
 
     override fun onUpArrowPressed() {
@@ -65,6 +77,10 @@ class WallpaperPreviewActivity :
             Toast.makeText(this, R.string.wallpaper_exit_split_screen, Toast.LENGTH_SHORT).show()
             onBackPressedDispatcher.onBackPressed()
         }
+    }
+
+    private fun WallpaperInfo.convertToWallpaperModel(): WallpaperModel {
+        return wallpaperModelFactory.getWallpaperModel(appContext, this)
     }
 
     companion object {

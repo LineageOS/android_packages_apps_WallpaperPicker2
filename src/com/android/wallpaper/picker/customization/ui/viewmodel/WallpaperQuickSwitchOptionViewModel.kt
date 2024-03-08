@@ -28,17 +28,15 @@ data class WallpaperQuickSwitchOptionViewModel(
     val placeholderColor: Int,
     /** A function to invoke to get the preview thumbnail for the option. */
     val thumbnail: suspend () -> Bitmap?,
+    /** The title of the wallpaper or wallpaper category */
+    val title: String?,
     /**
      * Whether the option should be rendered as large. If `false`, the option should be rendered
      * smaller.
      */
     val isLarge: Flow<Boolean>,
-    /** Whether the progress indicator should be visible. */
-    val isProgressIndicatorVisible: Flow<Boolean>,
     /** Whether the selection border should be visible. */
-    val isSelectionBorderVisible: Flow<Boolean>,
-    /** Whether the selection icon should be visible. */
-    val isSelectionIconVisible: Flow<Boolean>,
+    val isSelectionIndicatorVisible: Flow<Boolean>,
     /**
      * A function to invoke when the option is clicked by the user. If `null`, the option is not
      * clickable.

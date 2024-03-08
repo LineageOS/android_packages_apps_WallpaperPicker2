@@ -21,10 +21,10 @@ import com.android.wallpaper.asset.Asset
 /** Represents set of attributes that are common for all wallpapers. */
 data class CommonWallpaperData(
     val id: WallpaperId,
-    val title: String,
-    val collectionId: String,
-    val attributions: List<Pair<String, String>>,
+    val title: String?,
+    val attributions: List<String?>?,
+    val exploreActionUrl: String?,
     val thumbAsset: Asset,
     val placeholderColorInfo: ColorInfo,
-    var destination: Destination
+    var destination: Destination,
 )

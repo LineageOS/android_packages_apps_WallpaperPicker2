@@ -16,6 +16,9 @@
 package com.android.wallpaper.picker;
 
 import static android.app.Activity.RESULT_OK;
+import static android.app.WallpaperManager.FLAG_LOCK;
+import static android.app.WallpaperManager.FLAG_SYSTEM;
+import static android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
@@ -122,8 +125,14 @@ public class LivePreviewFragment extends PreviewFragment {
                 return;
             }
         }
-        mWallpaperSetter.setCurrentWallpaper(getActivity(), mWallpaper, null,
-                destination, 0, null,
+        mWallpaperSetter.setCurrentWallpaper(
+                getActivity(),
+                mWallpaper,
+                null,
+                SET_WALLPAPER_ENTRY_POINT_WALLPAPER_PREVIEW,
+                destination,
+                0,
+                null,
                 mWallpaperColors != null ? mWallpaperColors : getColorInfo().getWallpaperColors(),
                 callback);
     }
@@ -159,11 +168,14 @@ public class LivePreviewFragment extends PreviewFragment {
     private ActivityResultCallback<Integer> getCreativeWallpaperPreviewResultCallback() {
         return result -> {
             CreativeWallpaperInfo creativeWallpaper = (CreativeWallpaperInfo) mWallpaper;
-            android.app.WallpaperInfo currentWallpaper = WallpaperManager.getInstance(
-                    getContext()).getWallpaperInfo();
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(getContext());
+            boolean isCreativeWallpaperApplied = creativeWallpaper.isApplied(
+                    wallpaperManager.getWallpaperInfo(FLAG_SYSTEM),
+                    wallpaperManager.getWallpaperInfo(FLAG_LOCK));
             if (result == RESULT_OK) {
-                if (creativeWallpaper.canBeDeleted() || creativeWallpaper.isApplied(
-                        currentWallpaper)) {
+                if (creativeWallpaper.canBeDeleted() || isCreativeWallpaperApplied) {
+                    // When editing an existing wallpaper and pressing "Done" button causing the
+                    // overlays to become visible
                     showOverlays();
                     overrideOnBackPressed(new OnBackPressedCallback(true) {
                         @Override
@@ -172,16 +184,18 @@ public class LivePreviewFragment extends PreviewFragment {
                         }
                     });
                 } else {
+                    // When in the process of creating a new wallpaper and pressing "Done" button.
                     showOverlays();
                     overrideOnBackPressed(mSettingsOnBackPressedCallback);
                 }
             } else {
-                // Editing flow of a creative category wallpaper
-                if (creativeWallpaper.canBeDeleted() || creativeWallpaper.isApplied(
-                        currentWallpaper)) {
+                // When you initiate the editing process for a wallpaper and then decide to exit
+                // by pressing the back button during editing.
+                if (creativeWallpaper.canBeDeleted() || isCreativeWallpaperApplied) {
                     showOverlays();
-                // Flow where back key is pressed by user from the settings activity
                 } else {
+                    // Flow where user opens a template (so the settings activity is launched)
+                    // but user just simply presses back (without moving on to the next screen)
                     // TODO: This should ideally be a slide transition, but custom slide transition
                     // does not work properly, so having a fade transition for now
                     finishActivityWithFadeTransition();
@@ -280,11 +294,8 @@ public class LivePreviewFragment extends PreviewFragment {
 
     protected void showLiveWallpaperControl() {
         mSetWallpaperButton.setVisibility(VISIBLE);
-        // TODO (b/242908637): unify delete logic so we don't have to do the instanceof check here
         if (mWallpaper instanceof CreativeWallpaperInfo) {
             CreativeWallpaperInfo creativeWallpaper = (CreativeWallpaperInfo) mWallpaper;
-            android.app.WallpaperInfo currentWallpaper = WallpaperManager.getInstance(
-                    getContext()).getWallpaperInfo();
             mWallpaperControlButtonGroup.showButton(
                     WallpaperControlButtonGroup.EDIT,
                     (buttonView, isChecked) -> {
@@ -294,8 +305,11 @@ public class LivePreviewFragment extends PreviewFragment {
                         mWallpaperControlButtonGroup.setChecked(
                                 WallpaperControlButtonGroup.EDIT, false);
                     });
-            if (!creativeWallpaper.isApplied(currentWallpaper)
-                    && creativeWallpaper.canBeDeleted()) {
+            WallpaperManager wallpaperManager = WallpaperManager.getInstance(getContext());
+            boolean isCreativeWallpaperApplied = creativeWallpaper.isApplied(
+                    wallpaperManager.getWallpaperInfo(FLAG_SYSTEM),
+                    wallpaperManager.getWallpaperInfo(FLAG_LOCK));
+            if (!isCreativeWallpaperApplied && creativeWallpaper.canBeDeleted()) {
                 mWallpaperControlButtonGroup.showButton(
                         WallpaperControlButtonGroup.DELETE,
                         (buttonView, isChecked) -> {
@@ -455,14 +469,15 @@ public class LivePreviewFragment extends PreviewFragment {
             if (savedInstanceState == null) {
                 // First time at Fragment should initialize wallpaper preview.
                 creativeWallpaper.initializeWallpaperPreview(context);
-
             }
 
             if (savedInstanceState == null || isSettingsActivityPresent) {
+                WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
+                boolean isCreativeWallpaperApplied = creativeWallpaper.isApplied(
+                        wallpaperManager.getWallpaperInfo(FLAG_SYSTEM),
+                        wallpaperManager.getWallpaperInfo(FLAG_LOCK));
                 // First time at Fragment or settings activity is at present.
-                if (!creativeWallpaper.isApplied(WallpaperManager.getInstance(
-                        context).getWallpaperInfo())
-                        && !creativeWallpaper.canBeDeleted()) {
+                if (!isCreativeWallpaperApplied && !creativeWallpaper.canBeDeleted()) {
                     // If it cannot be deleted, we must be creating a new one, launch settings.
                     // savedInstanceState != null means is rotate state and previous fragment
                     // already launch settings.
@@ -586,11 +601,11 @@ public class LivePreviewFragment extends PreviewFragment {
                             LivePreviewFragment.super.onWallpaperColorsChanged(colors);
                         }
                     },
-                    mWallpaperSurface, null, mIsViewAsHome
-                    ? WallpaperManager.FLAG_SYSTEM : WallpaperManager.FLAG_LOCK,
-                    mIsAssetIdPresent ? WallpaperConnection.WHICH_PREVIEW.EDIT_NON_CURRENT
-                            : WallpaperConnection.WHICH_PREVIEW.EDIT_CURRENT
-                    );
+                    mWallpaperSurface,
+                    null,
+                    mIsViewAsHome ? FLAG_SYSTEM : FLAG_LOCK,
+                    mIsAssetIdPresent ? WallpaperConnection.WhichPreview.EDIT_NON_CURRENT
+                            : WallpaperConnection.WhichPreview.EDIT_CURRENT);
             mWallpaperConnection.setVisibility(true);
         } else {
             WallpaperColorsLoader.getWallpaperColors(

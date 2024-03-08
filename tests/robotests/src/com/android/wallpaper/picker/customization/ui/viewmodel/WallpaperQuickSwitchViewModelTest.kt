@@ -102,14 +102,17 @@ class WallpaperQuickSwitchViewModelTest {
                     WallpaperModel(
                         wallpaperId = "aaa",
                         placeholderColor = 1200,
+                        title = "title1",
                     ),
                     WallpaperModel(
                         wallpaperId = "bbb",
                         placeholderColor = 1300,
+                        title = "title2",
                     ),
                     WallpaperModel(
                         wallpaperId = "ccc",
                         placeholderColor = 1400,
+                        title = "title3",
                     ),
                 )
             client.setRecentWallpapers(buildMap { put(WallpaperDestination.HOME, models) })
@@ -131,9 +134,10 @@ class WallpaperQuickSwitchViewModelTest {
             val models =
                 FakeWallpaperClient.INITIAL_RECENT_WALLPAPERS.mapIndexed { idx, wp ->
                     WallpaperModel(
-                        wp.wallpaperId,
-                        wp.placeholderColor,
-                        if (idx == 0) 100 else wp.lastUpdated
+                        wallpaperId = wp.wallpaperId,
+                        placeholderColor = wp.placeholderColor,
+                        lastUpdated = if (idx == 0) 100 else wp.lastUpdated,
+                        title = "title1"
                     )
                 }
             client.setRecentWallpapers(buildMap { put(WallpaperDestination.HOME, models) })
@@ -192,9 +196,8 @@ class WallpaperQuickSwitchViewModelTest {
                 wallpaperId = model.wallpaperId,
                 placeholderColor = model.placeholderColor,
                 isLarge = isBeingSelected || (nothingBeingSelected && isSelected),
-                isSelectionIconVisible = nothingBeingSelected && isSelected,
-                isSelectionBorderVisible = isBeingSelected || (nothingBeingSelected && isSelected),
-                isProgressIndicatorVisible = isBeingSelected,
+                isSelectionIndicatorVisible =
+                    isBeingSelected || (nothingBeingSelected && isSelected),
                 isSelectable =
                     (!nothingBeingSelected && !isBeingSelected) ||
                         (nothingBeingSelected && !isSelected),
@@ -218,15 +221,9 @@ class WallpaperQuickSwitchViewModelTest {
             assertWithMessage("mismatching placeholderColor for index $index.")
                 .that(option.placeholderColor)
                 .isEqualTo(expected[index].placeholderColor)
-            assertWithMessage("mismatching isProgressIndicatorVisible for index $index.")
-                .that(collectLastValue(option.isProgressIndicatorVisible)())
-                .isEqualTo(expected[index].isProgressIndicatorVisible)
-            assertWithMessage("mismatching isSelectionIconVisible for index $index.")
-                .that(collectLastValue(option.isSelectionIconVisible)())
-                .isEqualTo(expected[index].isSelectionIconVisible)
             assertWithMessage("mismatching isSelectionBorderVisible for index $index.")
-                .that(collectLastValue(option.isSelectionBorderVisible)())
-                .isEqualTo(expected[index].isSelectionBorderVisible)
+                .that(collectLastValue(option.isSelectionIndicatorVisible)())
+                .isEqualTo(expected[index].isSelectionIndicatorVisible)
             assertWithMessage("mismatching isSelectable for index $index.")
                 .that(collectLastValue(option.onSelected)() != null)
                 .isEqualTo(expected[index].isSelectable)
@@ -237,9 +234,7 @@ class WallpaperQuickSwitchViewModelTest {
         val wallpaperId: String,
         val placeholderColor: Int,
         val isLarge: Boolean = false,
-        val isProgressIndicatorVisible: Boolean = false,
-        val isSelectionIconVisible: Boolean = false,
-        val isSelectionBorderVisible: Boolean = false,
+        val isSelectionIndicatorVisible: Boolean = false,
         val isSelectable: Boolean = true,
     )
 }

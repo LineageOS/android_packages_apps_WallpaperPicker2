@@ -17,6 +17,7 @@
 
 package com.android.wallpaper.picker.customization.domain.interactor
 
+import android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESET
 import androidx.test.filters.SmallTest
 import com.android.wallpaper.picker.customization.data.repository.WallpaperRepository
 import com.android.wallpaper.picker.customization.shared.model.WallpaperDestination
@@ -97,14 +98,16 @@ class WallpaperSnapshotRestorerTest {
             )
             underTest.setUpSnapshotRestorer(store)
             runCurrent()
-            wallpaperClient.setWallpaper(
+            wallpaperClient.setRecentWallpaper(
+                setWallpaperEntryPoint = SET_WALLPAPER_ENTRY_POINT_RESET,
                 destination = WallpaperDestination.HOME,
                 wallpaperId = INITIAL_HOME_WALLPAPERS[1].wallpaperId,
                 onDone = {},
             )
             runCurrent()
             assertThat(storedSnapshots).hasSize(2)
-            wallpaperClient.setWallpaper(
+            wallpaperClient.setRecentWallpaper(
+                setWallpaperEntryPoint = SET_WALLPAPER_ENTRY_POINT_RESET,
                 destination = WallpaperDestination.LOCK,
                 wallpaperId = INITIAL_LOCK_WALLPAPERS[4].wallpaperId,
                 onDone = {},
@@ -133,8 +136,12 @@ class WallpaperSnapshotRestorerTest {
 
     companion object {
         private val INITIAL_HOME_WALLPAPERS =
-            (0..5).map { index -> WallpaperModel(wallpaperId = "H$index", placeholderColor = 0) }
+            (0..5).map { index ->
+                WallpaperModel(wallpaperId = "H$index", placeholderColor = 0, title = "title1")
+            }
         private val INITIAL_LOCK_WALLPAPERS =
-            (0..5).map { index -> WallpaperModel(wallpaperId = "L$index", placeholderColor = 0) }
+            (0..5).map { index ->
+                WallpaperModel(wallpaperId = "L$index", placeholderColor = 0, title = "title2")
+            }
     }
 }

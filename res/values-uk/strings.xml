@@ -90,7 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Видалити"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Редагувати"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Видалити цей фоновий малюнок із пристрою?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Назад"</string>
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"Назад"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Змінити"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Завантажити"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Фоновий малюнок слайд-шоу"</string>
@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Скинути зміни?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Зміни не буде збережено"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Більше фонових малюнків"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"Фоновий малюнок %1$s"</string>
 </resources>

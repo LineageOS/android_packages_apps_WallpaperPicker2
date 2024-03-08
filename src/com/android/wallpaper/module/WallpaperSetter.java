@@ -1,6 +1,6 @@
 package com.android.wallpaper.module;
 
-import static android.app.WallpaperManager.FLAG_LOCK;
+import static android.stats.style.StyleEnums.SET_WALLPAPER_ENTRY_POINT_RESTORE;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -9,12 +9,10 @@ import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.util.Log;
-import android.view.Display;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,14 +26,12 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.asset.Asset;
 import com.android.wallpaper.model.LiveWallpaperInfo;
 import com.android.wallpaper.model.WallpaperInfo;
-import com.android.wallpaper.module.UserEventLogger.WallpaperSetFailureReason;
 import com.android.wallpaper.module.WallpaperPersister.Destination;
 import com.android.wallpaper.module.WallpaperPersister.SetWallpaperCallback;
+import com.android.wallpaper.module.logging.UserEventLogger;
+import com.android.wallpaper.module.logging.UserEventLogger.SetWallpaperEntryPoint;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment;
 import com.android.wallpaper.picker.SetWallpaperDialogFragment.Listener;
-import com.android.wallpaper.util.ScreenSizeCalculator;
-import com.android.wallpaper.util.ThrowableAnalyzer;
-import com.android.wallpaper.util.WallpaperCropUtils;
 
 import com.bumptech.glide.Glide;
 
@@ -60,7 +56,6 @@ public class WallpaperSetter {
 
     private final WallpaperPersister mWallpaperPersister;
     private final WallpaperPreferences mPreferences;
-    private final boolean mTestingModeEnabled;
     private final UserEventLogger mUserEventLogger;
     private final CurrentWallpaperInfoFactory mCurrentWallpaperInfoFactory;
     private ProgressDialog mProgressDialog;
@@ -68,45 +63,11 @@ public class WallpaperSetter {
 
     public WallpaperSetter(WallpaperPersister wallpaperPersister,
             WallpaperPreferences preferences, UserEventLogger userEventLogger,
-            CurrentWallpaperInfoFactory currentWallpaperInfoFactory,
-            boolean isTestingModeEnabled) {
-        mTestingModeEnabled = isTestingModeEnabled;
+            CurrentWallpaperInfoFactory currentWallpaperInfoFactory) {
         mWallpaperPersister = wallpaperPersister;
         mPreferences = preferences;
         mUserEventLogger = userEventLogger;
         mCurrentWallpaperInfoFactory = currentWallpaperInfoFactory;
-    }
-
-    /**
-     * Sets current wallpaper to the device with the minimum scale to fit the screen size.
-     *
-     * @param containerActivity main Activity that owns the current fragment
-     * @param wallpaper         info for the actual wallpaper to set
-     * @param destination       the wallpaper destination i.e. home vs. lockscreen vs. both.
-     * @param callback          optional callback to be notified when the wallpaper is set.
-     */
-    public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
-            @Destination final int destination,
-            @Nullable SetWallpaperCallback callback) {
-        Asset wallpaperAsset = wallpaper.getAsset(containerActivity.getApplicationContext());
-        wallpaperAsset.decodeRawDimensions(containerActivity, dimensions -> {
-            if (dimensions == null) {
-                Log.e(TAG, "Raw wallpaper's dimensions are null");
-                return;
-            }
-
-            Display defaultDisplay = containerActivity.getWindowManager().getDefaultDisplay();
-            Point screenSize = ScreenSizeCalculator.getInstance().getScreenSize(defaultDisplay);
-            Rect visibleRawWallpaperRect =
-                    WallpaperCropUtils.calculateVisibleRect(dimensions, screenSize);
-            float wallpaperScale = WallpaperCropUtils.calculateMinZoom(dimensions, screenSize);
-            Rect cropRect = WallpaperCropUtils.calculateCropRect(
-                    containerActivity.getApplicationContext(), defaultDisplay,
-                    dimensions, visibleRawWallpaperRect, wallpaperScale);
-
-            setCurrentWallpaper(containerActivity, wallpaper, wallpaperAsset, destination,
-                    wallpaperScale, cropRect, null, callback);
-        });
     }
 
     /**
@@ -115,6 +76,7 @@ public class WallpaperSetter {
      * @param containerActivity main Activity that owns the current fragment
      * @param wallpaper         Info for the actual wallpaper to set
      * @param wallpaperAsset    Wallpaper asset from which to retrieve image data.
+     * @param setWallpaperEntryPoint The entry point where the wallpaper is set.
      * @param destination       The wallpaper destination i.e. home vs. lockscreen vs. both.
      * @param wallpaperScale    Scaling factor applied to the source image before setting the
      *                          wallpaper to the device.
@@ -124,12 +86,12 @@ public class WallpaperSetter {
      * @param callback          Optional callback to be notified when the wallpaper is set.
      */
     public void setCurrentWallpaper(Activity containerActivity, WallpaperInfo wallpaper,
-            @Nullable Asset wallpaperAsset, @Destination final int destination,
-            float wallpaperScale, @Nullable Rect cropRect, WallpaperColors wallpaperColors,
-            @Nullable SetWallpaperCallback callback) {
+            @Nullable Asset wallpaperAsset, @SetWallpaperEntryPoint int setWallpaperEntryPoint,
+            @Destination final int destination, float wallpaperScale, @Nullable Rect cropRect,
+            WallpaperColors wallpaperColors, @Nullable SetWallpaperCallback callback) {
         if (wallpaper instanceof LiveWallpaperInfo) {
-            setCurrentLiveWallpaper(containerActivity, (LiveWallpaperInfo) wallpaper, destination,
-                    wallpaperColors, callback);
+            setCurrentLiveWallpaper(containerActivity, (LiveWallpaperInfo) wallpaper,
+                    setWallpaperEntryPoint, destination, wallpaperColors, callback);
             return;
         }
         mPreferences.setPendingWallpaperSetStatus(
@@ -145,7 +107,7 @@ public class WallpaperSetter {
 
         // ProgressDialog endlessly updates the UI thread, keeping it from going idle which
         // therefore causes Espresso to hang once the dialog is shown.
-        if (!mTestingModeEnabled && !containerActivity.isFinishing()) {
+        if (!containerActivity.isFinishing()) {
             int themeResId = (VERSION.SDK_INT < VERSION_CODES.LOLLIPOP)
                     ? R.style.ProgressDialogThemePreL : R.style.LightDialogTheme;
             mProgressDialog = new ProgressDialog(containerActivity, themeResId);
@@ -178,7 +140,8 @@ public class WallpaperSetter {
                     @Override
                     public void onSuccess(WallpaperInfo wallpaperInfo,
                             @Destination int destination) {
-                        onWallpaperApplied(wallpaper, containerActivity);
+                        onWallpaperApplied(containerActivity, wallpaper, setWallpaperEntryPoint,
+                                destination);
                         if (callback != null) {
                             callback.onSuccess(wallpaper, destination);
                         }
@@ -186,7 +149,7 @@ public class WallpaperSetter {
 
                     @Override
                     public void onError(Throwable throwable) {
-                        onWallpaperApplyError(throwable, containerActivity);
+                        onWallpaperApplyError(containerActivity);
                         if (callback != null) {
                             callback.onError(throwable);
                         }
@@ -196,20 +159,14 @@ public class WallpaperSetter {
     }
 
     private void setCurrentLiveWallpaper(Activity activity, LiveWallpaperInfo wallpaper,
-            @Destination final int destination, WallpaperColors colors,
-            @Nullable SetWallpaperCallback callback) {
+            @SetWallpaperEntryPoint int setWallpaperEntryPoint, @Destination final int destination,
+            WallpaperColors colors, @Nullable SetWallpaperCallback callback) {
         try {
             // Save current screen rotation so we can temporarily disable rotation while setting the
             // wallpaper and restore after setting the wallpaper finishes.
             saveAndLockScreenOrientationIfNeeded(activity);
 
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(activity);
-            if (destination == WallpaperPersister.DEST_LOCK_SCREEN
-                    && !wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
-                throw new IllegalArgumentException(
-                        "Live wallpaper cannot be applied on lock screen only");
-            }
-
             LiveWallpaperInfo updatedWallpaperInfo = wallpaper.saveWallpaper(
                     activity.getApplicationContext(), destination);
             if (updatedWallpaperInfo != null) {
@@ -223,13 +180,13 @@ public class WallpaperSetter {
             mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
                     wallpaper.getWallpaperId(), wallpaper, colors);
             mCurrentWallpaperInfoFactory.clearCurrentWallpaperInfos();
-            onWallpaperApplied(wallpaper, activity);
+            onWallpaperApplied(activity, wallpaper, setWallpaperEntryPoint, destination);
             if (callback != null) {
                 callback.onSuccess(wallpaper, destination);
             }
             mWallpaperPersister.onLiveWallpaperSet(destination);
         } catch (RuntimeException | IOException e) {
-            onWallpaperApplyError(e, activity);
+            onWallpaperApplyError(activity);
             if (callback != null) {
                 callback.onError(e);
             }
@@ -249,10 +206,6 @@ public class WallpaperSetter {
             wallpaperManager.setWallpaperComponent(
                     wallpaper.getWallpaperComponent().getComponent());
         }
-        if (!wallpaperManager.isLockscreenLiveWallpaperEnabled()
-                && destination == WallpaperPersister.DEST_BOTH) {
-            wallpaperManager.clear(FLAG_LOCK);
-        }
     }
 
     /**
@@ -264,16 +217,11 @@ public class WallpaperSetter {
      * @param colors      The {@link WallpaperColors} for placeholder of quickswitching
      * @param callback    Optional callback to be notified when the wallpaper is set.
      */
-    public void setCurrentLiveWallpaper(Context context, LiveWallpaperInfo wallpaper,
+    public void setCurrentLiveWallpaperFromRestore(Context context, LiveWallpaperInfo wallpaper,
             @Destination final int destination, @Nullable WallpaperColors colors,
             @Nullable SetWallpaperCallback callback) {
         try {
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
-            if (destination == WallpaperPersister.DEST_LOCK_SCREEN
-                    && !wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
-                throw new IllegalArgumentException(
-                        "Live wallpaper cannot be applied on lock screen only");
-            }
             setWallpaperComponent(wallpaperManager, wallpaper, destination);
             mPreferences.storeLatestWallpaper(WallpaperPersister.destinationToFlags(destination),
                     wallpaper.getWallpaperId(),
@@ -282,6 +230,11 @@ public class WallpaperSetter {
                                     .getLowResBitmap(context)));
             mCurrentWallpaperInfoFactory.clearCurrentWallpaperInfos();
             // Not call onWallpaperApplied() as no UI is presented.
+            mUserEventLogger.logWallpaperApplied(
+                    wallpaper.getCollectionId(context),
+                    wallpaper.getWallpaperId(), wallpaper.getEffectNames(),
+                    SET_WALLPAPER_ENTRY_POINT_RESTORE,
+                    UserEventLogger.Companion.toWallpaperDestinationForLogging(destination));
             if (callback != null) {
                 callback.onSuccess(wallpaper, destination);
             }
@@ -294,29 +247,25 @@ public class WallpaperSetter {
         }
     }
 
-    private void onWallpaperApplied(WallpaperInfo wallpaper, Activity containerActivity) {
-        mUserEventLogger.logWallpaperSet(
+    private void onWallpaperApplied(
+            Activity containerActivity,
+            WallpaperInfo wallpaper,
+            @SetWallpaperEntryPoint int setWallpaperEntryPoint,
+            @Destination int destination) {
+        mUserEventLogger.logWallpaperApplied(
                 wallpaper.getCollectionId(containerActivity),
-                wallpaper.getWallpaperId(), wallpaper.getEffectNames());
+                wallpaper.getWallpaperId(), wallpaper.getEffectNames(),
+                setWallpaperEntryPoint,
+                UserEventLogger.Companion.toWallpaperDestinationForLogging(destination));
         mPreferences.setPendingWallpaperSetStatus(
                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
-        mUserEventLogger.logWallpaperSetResult(
-                UserEventLogger.WALLPAPER_SET_RESULT_SUCCESS);
         cleanUp();
         restoreScreenOrientationIfNeeded(containerActivity);
     }
 
-    private void onWallpaperApplyError(Throwable throwable, Activity containerActivity) {
+    private void onWallpaperApplyError(Activity containerActivity) {
         mPreferences.setPendingWallpaperSetStatus(
                 WallpaperPreferences.WALLPAPER_SET_NOT_PENDING);
-        mUserEventLogger.logWallpaperSetResult(
-                UserEventLogger.WALLPAPER_SET_RESULT_FAILURE);
-        @WallpaperSetFailureReason int failureReason = ThrowableAnalyzer.isOOM(
-                throwable)
-                ? UserEventLogger.WALLPAPER_SET_FAILURE_REASON_OOM
-                : UserEventLogger.WALLPAPER_SET_FAILURE_REASON_OTHER;
-        mUserEventLogger.logWallpaperSetFailureReason(failureReason);
-
         cleanUp();
         restoreScreenOrientationIfNeeded(containerActivity);
     }
@@ -391,34 +340,6 @@ public class WallpaperSetter {
         if (isLiveWallpaper) {
             setWallpaperDialog.setHomeOptionAvailable(isHomeOption);
             setWallpaperDialog.setLockOptionAvailable(isLockOption);
-        }
-        if (wallpaperManager.isLockscreenLiveWallpaperEnabled()) {
-            setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
-            return;
-        }
-
-        WallpaperStatusChecker wallpaperStatusChecker = InjectorProvider.getInjector()
-                .getWallpaperStatusChecker(activity.getApplicationContext());
-        boolean isLiveWallpaperSet =
-                WallpaperManager.getInstance(activity).getWallpaperInfo() != null;
-        // Alternative of ag/15567276
-        boolean isBuiltIn = !isLiveWallpaperSet
-                && !wallpaperStatusChecker.isHomeStaticWallpaperSet();
-
-        if ((isLiveWallpaperSet || isBuiltIn)
-                && !wallpaperStatusChecker.isLockWallpaperSet()) {
-            if (isLiveWallpaper) {
-                // If lock wallpaper is live and we're setting a live wallpaper, we can only
-                // set it to both, so bypass the dialog.
-                listener.onSet(WallpaperPersister.DEST_BOTH);
-                restoreScreenOrientationIfNeeded(activity);
-                return;
-            }
-            // if the lock wallpaper is a live wallpaper, we cannot set a home-only static one
-            setWallpaperDialog.setHomeOptionAvailable(false);
-        }
-        if (isLiveWallpaper) {
-            setWallpaperDialog.setLockOptionAvailable(false);
         }
         setWallpaperDialog.show(fragmentManager, TAG_SET_WALLPAPER_DIALOG_FRAGMENT);
     }

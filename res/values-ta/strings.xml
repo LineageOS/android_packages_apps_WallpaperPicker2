@@ -90,7 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"நீக்கு"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"மாற்று"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"உங்கள் சாதனத்திலிருந்து இந்த வால்பேப்பரை நீக்கவா?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"பின்செல்வதற்கான பட்டன்"</string>
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"மேலே செல்லும்"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"திருத்துவதற்கான பட்டன்"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"பதிவிறக்குவதற்கான பட்டன்"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ஸ்லைடுகாட்சி வால்பேப்பர்"</string>
@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"மாற்றங்களை மீட்டமைக்கவா?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"உங்கள் மாற்றங்கள் சேமிக்கப்படாது"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"மேலும் வால்பேப்பர்கள்"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"வால்பேப்பர் %1$s"</string>
 </resources>

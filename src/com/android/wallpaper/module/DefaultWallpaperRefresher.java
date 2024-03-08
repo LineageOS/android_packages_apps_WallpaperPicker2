@@ -23,6 +23,7 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.ParcelFileDescriptor;
@@ -32,13 +33,16 @@ import com.android.wallpaper.R;
 import com.android.wallpaper.asset.BitmapUtils;
 import com.android.wallpaper.model.LiveWallpaperMetadata;
 import com.android.wallpaper.model.WallpaperMetadata;
+import com.android.wallpaper.model.wallpaper.ScreenOrientation;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation of {@link WallpaperRefresher} which refreshes wallpaper metadata
@@ -112,11 +116,9 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                 wallpaperMetadatas.add(new WallpaperMetadata(
                         mWallpaperPreferences.getHomeWallpaperAttributions(),
                         mWallpaperPreferences.getHomeWallpaperActionUrl(),
-                        mWallpaperPreferences.getHomeWallpaperActionLabelRes(),
-                        mWallpaperPreferences.getHomeWallpaperActionIconRes(),
                         mWallpaperPreferences.getHomeWallpaperCollectionId(),
-                        mWallpaperPreferences.getHomeWallpaperBackingFileName(),
-                        null));
+                        /* wallpaperComponent= */ null,
+                        getCurrentWallpaperCropHints(FLAG_SYSTEM)));
             } else {
                 wallpaperMetadatas.add(
                         new LiveWallpaperMetadata(mWallpaperManager.getWallpaperInfo()));
@@ -135,16 +137,13 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
                 setFallbackLockScreenWallpaperMetadata();
             }
 
-            if (mWallpaperManager.getWallpaperInfo(FLAG_LOCK) == null
-                    || !mWallpaperManager.isLockscreenLiveWallpaperEnabled()) {
+            if (mWallpaperManager.getWallpaperInfo(FLAG_LOCK) == null) {
                 wallpaperMetadatas.add(new WallpaperMetadata(
                         mWallpaperPreferences.getLockWallpaperAttributions(),
                         mWallpaperPreferences.getLockWallpaperActionUrl(),
-                        mWallpaperPreferences.getLockWallpaperActionLabelRes(),
-                        mWallpaperPreferences.getLockWallpaperActionIconRes(),
                         mWallpaperPreferences.getLockWallpaperCollectionId(),
-                        mWallpaperPreferences.getLockWallpaperBackingFileName(),
-                        null));
+                        /* wallpaperComponent= */ null,
+                        getCurrentWallpaperCropHints(FLAG_LOCK)));
             } else {
                 wallpaperMetadatas.add(new LiveWallpaperMetadata(
                         mWallpaperManager.getWallpaperInfo(FLAG_LOCK)));
@@ -359,6 +358,12 @@ public class DefaultWallpaperRefresher implements WallpaperRefresher {
             return attributions.get(0) == null
                     && attributions.get(1) == null
                     && attributions.get(2) == null;
+        }
+
+        private Map<ScreenOrientation, Rect> getCurrentWallpaperCropHints(
+                @WallpaperManager.SetWallpaperFlags int which) {
+            // TODO(b/303317694): Get cropHints from interactor.
+            return new HashMap<ScreenOrientation, Rect>();
         }
     }
 }

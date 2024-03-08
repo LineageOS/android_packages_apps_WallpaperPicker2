@@ -78,10 +78,10 @@ object CustomizationPickerBinder {
             lifecycleOwner = lifecycleOwner,
         )
 
-        val lockScrollContainer = view.findViewById<NestedScrollView>(R.id.lock_scroll_container)
-        val homeScrollContainer = view.findViewById<NestedScrollView>(R.id.home_scroll_container)
+        val lockScrollContainer = view.requireViewById<NestedScrollView>(R.id.lock_scroll_container)
+        val homeScrollContainer = view.requireViewById<NestedScrollView>(R.id.home_scroll_container)
 
-        val lockSectionContainer = view.findViewById<ViewGroup>(R.id.lock_section_container)
+        val lockSectionContainer = view.requireViewById<ViewGroup>(R.id.lock_section_container)
         lockSectionContainer.setOnApplyWindowInsetsListener { v: View, windowInsets: WindowInsets ->
             v.setPadding(
                 v.paddingLeft,
@@ -97,7 +97,7 @@ object CustomizationPickerBinder {
             topMargin = 0
         }
 
-        val homeSectionContainer = view.findViewById<ViewGroup>(R.id.home_section_container)
+        val homeSectionContainer = view.requireViewById<ViewGroup>(R.id.home_section_container)
         homeSectionContainer.setOnApplyWindowInsetsListener { v: View, windowInsets: WindowInsets ->
             v.setPadding(
                 v.paddingLeft,

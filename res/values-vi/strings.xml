@@ -90,7 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"Xóa"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"Chỉnh sửa"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"Xoá hình nền này khỏi thiết bị của bạn?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"Quay lại"</string>
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"Di chuyển lên trên"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"Chỉnh sửa"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"Tải xuống"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"Hình nền theo kiểu trình chiếu"</string>
@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"Đặt lại các thay đổi?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"Thay đổi của bạn sẽ không được lưu"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"Hình nền khác"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"Hình nền %1$s"</string>
 </resources>

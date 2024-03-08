@@ -19,6 +19,8 @@ import CreativeCategoryHolder
 import android.app.Activity
 import android.app.ProgressDialog
 import android.app.WallpaperManager
+import android.app.WallpaperManager.FLAG_LOCK
+import android.app.WallpaperManager.FLAG_SYSTEM
 import android.content.DialogInterface
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -236,8 +238,10 @@ class IndividualPickerFragment2 :
                 val appliedWallpaperIds =
                     getAppliedWallpaperIds().also { this.appliedWallpaperIds = it }
                 val firstEntry = byGroup.keys.firstOrNull()
-                val currentWallpaper: android.app.WallpaperInfo? =
-                    WallpaperManager.getInstance(context).wallpaperInfo
+                val currentHomeWallpaper: android.app.WallpaperInfo? =
+                    WallpaperManager.getInstance(context).getWallpaperInfo(FLAG_SYSTEM)
+                val currentLockWallpaper: android.app.WallpaperInfo? =
+                    WallpaperManager.getInstance(context).getWallpaperInfo(FLAG_LOCK)
 
                 // Handle first group (templates/items that allow to create a new wallpaper)
                 if (mIsCreativeWallpaperEnabled && firstEntry != null && supportsUserCreated) {
@@ -257,7 +261,12 @@ class IndividualPickerFragment2 :
                         if (!TextUtils.isEmpty(groupName)) {
                             addItemHeader(groupName, items.isEmpty())
                         }
-                        addWallpaperItems(wallpapers, currentWallpaper, appliedWallpaperIds)
+                        addWallpaperItems(
+                            wallpapers,
+                            currentHomeWallpaper,
+                            currentLockWallpaper,
+                            appliedWallpaperIds
+                        )
                     }
                 }
                 maybeSetUpImageGrid()
@@ -309,13 +318,15 @@ class IndividualPickerFragment2 :
      */
     private fun addWallpaperItems(
         wallpapers: List<WallpaperInfo>,
-        currentWallpaper: android.app.WallpaperInfo?,
-        appliedWallpaperIds: Set<String>
+        currentHomeWallpaper: android.app.WallpaperInfo?,
+        currentLockWallpaper: android.app.WallpaperInfo?,
+        appliedWallpaperIds: Set<String>,
     ) {
         items.addAll(
             wallpapers.map {
                 val isApplied =
-                    if (it is LiveWallpaperInfo) it.isApplied(currentWallpaper)
+                    if (it is LiveWallpaperInfo)
+                        (it.isApplied(currentHomeWallpaper, currentLockWallpaper))
                     else appliedWallpaperIds.contains(it.wallpaperId)
                 PickerItem.WallpaperItem(it, isApplied)
             }
@@ -363,7 +374,7 @@ class IndividualPickerFragment2 :
     ): View {
         val view: View = inflater.inflate(R.layout.fragment_individual_picker, container, false)
         if (getIndividualPickerFragmentHost().isHostToolbarShown) {
-            view.findViewById<View>(R.id.header_bar).visibility = View.GONE
+            view.requireViewById<View>(R.id.header_bar).visibility = View.GONE
             setUpArrowEnabled(/* upArrow= */ true)
             if (isRotationEnabled()) {
                 getIndividualPickerFragmentHost().setToolbarMenu(R.menu.individual_picker_menu)
@@ -375,8 +386,8 @@ class IndividualPickerFragment2 :
             }
             setTitle(category?.title)
         }
-        imageGrid = view.findViewById<View>(R.id.wallpaper_grid) as RecyclerView
-        loading = view.findViewById(R.id.loading_indicator)
+        imageGrid = view.requireViewById<View>(R.id.wallpaper_grid) as RecyclerView
+        loading = view.requireViewById(R.id.loading_indicator)
         updateLoading()
         maybeSetUpImageGrid()
         // For nav bar edge-to-edge effect.
@@ -545,7 +556,7 @@ class IndividualPickerFragment2 :
     override fun onResume() {
         super.onResume()
         val preferences = InjectorProvider.getInjector().getPreferences(requireActivity())
-        preferences.lastAppActiveTimestamp = Date().time
+        preferences.setLastAppActiveTimestamp(Date().time)
 
         // Reset Glide memory settings to a "normal" level of usage since it may have been lowered
         // in PreviewFragment.
@@ -713,15 +724,15 @@ class IndividualPickerFragment2 :
             if (wallpaperInfo != null) {
                 wallpaperInfo.serviceName
             } else {
-                prefs.homeWallpaperRemoteId
+                prefs.getHomeWallpaperRemoteId()
             }
-        if (!TextUtils.isEmpty(homeWallpaperId)) {
+        if (!homeWallpaperId.isNullOrEmpty()) {
             appliedWallpaperIds.add(homeWallpaperId)
         }
         val isLockWallpaperApplied =
             wallpaperManager!!.getWallpaperId(WallpaperManager.FLAG_LOCK) >= 0
-        val lockWallpaperId = prefs.lockWallpaperRemoteId
-        if (isLockWallpaperApplied && !TextUtils.isEmpty(lockWallpaperId)) {
+        val lockWallpaperId = prefs.getLockWallpaperRemoteId()
+        if (isLockWallpaperApplied && !lockWallpaperId.isNullOrEmpty()) {
             appliedWallpaperIds.add(lockWallpaperId)
         }
         return appliedWallpaperIds
@@ -731,7 +742,7 @@ class IndividualPickerFragment2 :
     private fun isAppliedWallpaperChanged(): Boolean {
         // Reload wallpapers if the current wallpapers have changed
         getAppliedWallpaperIds().let {
-            if (appliedWallpaperIds.isEmpty() || appliedWallpaperIds != it) {
+            if (appliedWallpaperIds != it) {
                 return true
             }
         }
@@ -898,7 +909,7 @@ class IndividualPickerFragment2 :
             val wallpaper = item.wallpaperInfo
             wallpaper.computeColorInfo(holder.itemView.context)
             (holder as IndividualHolder).bindWallpaper(wallpaper)
-            val container = holder.itemView.findViewById<CardView>(R.id.wallpaper_container)
+            val container = holder.itemView.requireViewById<CardView>(R.id.wallpaper_container)
             val radiusId: Int =
                 if (isFewerColumnLayout) {
                     R.dimen.grid_item_all_radius
@@ -917,7 +928,7 @@ class IndividualPickerFragment2 :
             @DrawableRes icon: Int,
             show: Boolean
         ) {
-            val badge = holder.itemView.findViewById<ImageView>(R.id.indicator_icon)
+            val badge = holder.itemView.requireViewById<ImageView>(R.id.indicator_icon)
             if (show) {
                 val margin =
                     if (isFewerColumnLayout) {

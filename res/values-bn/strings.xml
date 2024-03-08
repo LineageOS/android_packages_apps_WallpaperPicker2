@@ -90,7 +90,7 @@
     <string name="delete_live_wallpaper" msgid="589212696102662329">"মুছে দিন"</string>
     <string name="edit_live_wallpaper" msgid="3132060073690558045">"এডিট করুন"</string>
     <string name="delete_wallpaper_confirmation" msgid="1905114562243802354">"আপনার ডিভাইস থেকে এই ওয়ালপেপার মুছে দেবেন?"</string>
-    <string name="bottom_action_bar_back" msgid="8237013112999946725">"ফিরে যান"</string>
+    <string name="bottom_action_bar_back" msgid="2620581414970740784">"উপরের দিকে নেভিগেট করুন"</string>
     <string name="bottom_action_bar_edit" msgid="1214742990893082138">"এডিট করুন"</string>
     <string name="bottom_action_bar_download" msgid="3983122338076389421">"ডাউনলোড করুন"</string>
     <string name="bottom_action_bar_slideshow_wallpaper" msgid="509770525179533154">"ওয়ালপেপার স্লাইডশো দেখুন"</string>
@@ -130,4 +130,5 @@
     <string name="reset_confirmation_dialog_title" msgid="3391905685838213712">"পরিবর্তন রিসেট করবেন?"</string>
     <string name="reset_confirmation_dialog_message" msgid="888669268626289603">"আপনার করা পরিবর্তন সেভ করা হবে না"</string>
     <string name="more_wallpapers" msgid="8116268433411881705">"আরও ওয়ালপেপার"</string>
+    <string name="recent_wallpaper_label" msgid="3996353584371118367">"ওয়ালপেপার %1$s"</string>
 </resources>

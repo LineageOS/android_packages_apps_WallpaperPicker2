@@ -16,6 +16,10 @@
 package com.android.wallpaper.module
 
 import android.content.Context
+import com.android.wallpaper.module.logging.NoOpUserEventLogger
+import com.android.wallpaper.module.logging.UserEventLogger
+import com.android.wallpaper.util.converter.DefaultWallpaperModelFactory
+import com.android.wallpaper.util.converter.WallpaperModelFactory
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -29,6 +33,12 @@ import javax.inject.Singleton
 abstract class AppModule {
     @Binds @Singleton abstract fun bindInjector(impl: WallpaperPicker2Injector): Injector
 
+    @Binds
+    @Singleton
+    abstract fun bindWallpaperModelFactory(
+        impl: DefaultWallpaperModelFactory
+    ): WallpaperModelFactory
+
     companion object {
         @Provides
         @Singleton
@@ -36,6 +46,12 @@ abstract class AppModule {
             @ApplicationContext context: Context
         ): WallpaperPreferences {
             return DefaultWallpaperPreferences(context)
+        }
+
+        @Provides
+        @Singleton
+        fun provideUserEventLogger(): UserEventLogger {
+            return NoOpUserEventLogger()
         }
     }
 }

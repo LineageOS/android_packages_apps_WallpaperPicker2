@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12ac3d4d_0fdc8167",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14010
+      },
+      "writtenOn": "2025-03-26T11:53:13Z",
+      "side": 1,
+      "message": "Fixes the empty \"Change wallpaper\" screen",
+      "revId": "578cddd56b419e12a6cb300bb23e834d4f7f4e4f",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}

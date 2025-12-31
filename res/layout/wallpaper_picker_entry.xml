@@ -26,6 +26,7 @@
         android:id="@+id/wallpaper_picker_entry_expanded_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:paddingTop="@dimen/customization_option_entry_vertical_padding_large"
         android:paddingHorizontal="@dimen/customization_option_entry_horizontal_padding">
 
@@ -110,8 +111,6 @@
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
         android:textColor="@color/system_primary"
         android:textSize="@dimen/wallpaper_header_text_size"
-        android:alpha="0.0"
-        android:visibility="invisible"
         android:maxLines="1"
         android:ellipsize="end"
         app:drawableStartCompat="@drawable/ic_nav_wallpaper"

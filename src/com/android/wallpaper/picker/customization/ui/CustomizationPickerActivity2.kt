@@ -21,6 +21,7 @@ import android.app.ComponentCaller
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
@@ -129,6 +130,7 @@ class CustomizationPickerActivity2 :
 
         setContentView(R.layout.activity_cusomization_picker2)
         WindowCompat.setDecorFitsSystemWindows(window, ActivityUtils.isSUWMode(this))
+        window.statusBarColor = Color.TRANSPARENT
 
         ColorUpdateBinder.bind(
             setColor = { color ->

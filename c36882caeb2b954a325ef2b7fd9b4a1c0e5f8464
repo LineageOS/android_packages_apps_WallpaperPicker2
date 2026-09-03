@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34243ed4_15028531",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 37876
+      },
+      "writtenOn": "2026-09-03T08:49:13Z",
+      "side": 1,
+      "message": "Tested on caiman (Pixel 9 Pro), WallpaperPicker2 now has consistent background colour between content and window decor",
+      "revId": "c36882caeb2b954a325ef2b7fd9b4a1c0e5f8464",
+      "serverId": "1ec6b3db-b2c1-4fa4-84a2-4c7efe89ba71"
+    }
+  ]
+}

@@ -314,16 +314,18 @@ class CustomizationPickerFragment :
         ViewCompat.setOnApplyWindowInsetsListener(pickerMotionContainer) { _, windowInsets ->
             val insets: Insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
             val isVisible = windowInsets.isVisible(WindowInsetsCompat.Type.navigationBars())
+            // The top inset never depends on the nav bar, apply it unconditionally. Gesture
+            // navigation with the hint hidden reports a visible nav bar with a bottom inset of 0
+            // for as long as it is in use, which would otherwise leave the toolbar unpadded.
+            applyStatusBarInset(toolbarContainer = toolbarContainer, statusBarHeight = insets.top)
             if (!(insets.bottom == 0 && isVisible)) {
                 // We should do nothing in the case of "bottom inset 0 with nav bar visible".
                 // The event usually happens when the system dispatches an initial pass to reset the
                 // layout or prepare for the new orientation. This event is usually followed up
                 // with another insets update where the bottom inset is no longer 0.
-                applySystemBarInsets(
-                    toolbarContainer = toolbarContainer,
+                applyNavBarInsets(
                     optionContainer = optionContainer,
                     customizationFloatingSheetContainer = customizationFloatingSheetContainer,
-                    statusBarHeight = insets.top,
                     navBarHeight = insets.bottom,
                 )
 
@@ -556,15 +558,15 @@ class CustomizationPickerFragment :
         return view
     }
 
-    private fun applySystemBarInsets(
-        toolbarContainer: LinearLayout,
+    private fun applyStatusBarInset(toolbarContainer: LinearLayout, statusBarHeight: Int) {
+        (toolbarContainer.layoutParams as MarginLayoutParams).setMargins(0, statusBarHeight, 0, 0)
+    }
+
+    private fun applyNavBarInsets(
         optionContainer: ConstraintLayout,
         customizationFloatingSheetContainer: FrameLayout,
-        statusBarHeight: Int,
         navBarHeight: Int,
     ) {
-        (toolbarContainer.layoutParams as MarginLayoutParams).setMargins(0, statusBarHeight, 0, 0)
-
         val horizontalPadding =
             resources.getDimensionPixelSize(
                 R.dimen.customization_option_container_horizontal_padding

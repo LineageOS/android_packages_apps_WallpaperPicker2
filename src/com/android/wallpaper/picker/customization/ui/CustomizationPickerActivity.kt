@@ -87,7 +87,6 @@ class CustomizationPickerActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enforcePortraitForHandheldAndFoldedDisplay()
 
         DailyLoggingAlarmScheduler.setAlarm(applicationContext)
 
@@ -266,16 +265,6 @@ class CustomizationPickerActivity :
                     )
                     .commit()
             }
-        }
-    }
-
-    private fun enforcePortraitForHandheldAndFoldedDisplay() {
-        val wantedOrientation =
-            if (displayUtils.isLargeScreenOrUnfoldedDisplay(this))
-                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        if (requestedOrientation != wantedOrientation) {
-            requestedOrientation = wantedOrientation
         }
     }
 

@@ -109,24 +109,31 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         clipChildren = false
         clipToPadding = false
 
-        // For desktop UI, the wallpaper entry does not expand and collapse when scrolling. It is
-        // either initially expanded if there are carousel items or collapsed if no items.
-        if (!shouldShowDesktopUi) {
-            post {
-                // Make fixed width and height of the container, so it does not shrink with parent.
-                expandedContainer.layoutParams =
-                    LayoutParams(expandedContainer.width, expandedContainer.height).apply {
-                        gravity = Gravity.CENTER
-                    }
-            }
-        }
-
-        // Use a ViewTreeObserver to get dimensions after the first layout pass
+        // Use a ViewTreeObserver to get dimensions after the first sized layout pass. An embedded
+        // activity (e.g. the Settings two-pane) can be laid out at zero width first, and capturing
+        // that would leave the expanded container permanently zero-width.
         viewTreeObserver.addOnGlobalLayoutListener(
             object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
+                    if (expandedContainer.width == 0 || expandedContainer.height == 0) return
                     // Ensure we only run this once
                     viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                    // For desktop UI, the wallpaper entry does not expand and collapse when
+                    // scrolling. It is either initially expanded if there are carousel items or
+                    // collapsed if no items.
+                    if (!shouldShowDesktopUi) {
+                        val containerWidth = expandedContainer.width
+                        val containerHeight = expandedContainer.height
+                        post {
+                            // Make fixed width and height of the container, so it does not shrink
+                            // with parent.
+                            expandedContainer.layoutParams =
+                                LayoutParams(containerWidth, containerHeight).apply {
+                                    gravity = Gravity.CENTER
+                                }
+                        }
+                    }
 
                     // Capture the fully expanded dimensions (default state)
                     expandedWidth = width

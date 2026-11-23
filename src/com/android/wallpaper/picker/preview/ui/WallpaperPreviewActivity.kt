@@ -18,7 +18,6 @@ package com.android.wallpaper.picker.preview.ui
 import android.app.WindowConfiguration.WINDOWING_MODE_FREEFORM
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import android.os.OutcomeReceiver
@@ -100,7 +99,6 @@ class WallpaperPreviewActivity :
         super.onCreate(savedInstanceState)
         isRefactorWallpaperPreviewScreenEnabled =
             BaseFlags.get(this).isRefactorWallpaperPreviewScreenEnabled()
-        enforcePortraitForHandheldAndFoldedDisplay()
         wallpaperPreviewViewModel.updateDisplayConfiguration()
         wallpaperPreviewViewModel.setIsWallpaperColorPreviewEnabled(
             !InjectorProvider.getInjector().isCurrentSelectedColorPreset(appContext)
@@ -527,22 +525,5 @@ class WallpaperPreviewActivity :
                     liveWallpaperData.getEditActivityIntent(true),
                 )
             }
-    }
-
-    /**
-     * If the display is a handheld display or a folded display from a foldable, we enforce the
-     * activity to be portrait.
-     *
-     * This method should be called upon initialization of this activity, and whenever there is a
-     * configuration change.
-     */
-    private fun enforcePortraitForHandheldAndFoldedDisplay() {
-        val wantedOrientation =
-            if (displayUtils.isLargeScreenOrUnfoldedDisplay(this))
-                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            else ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        if (requestedOrientation != wantedOrientation) {
-            requestedOrientation = wantedOrientation
-        }
     }
 }

@@ -135,6 +135,8 @@ class SmallPreviewFragment : Hilt_SmallPreviewFragment() {
             inflater.inflate(
                 if (isFoldable) {
                     R.layout.fragment_small_preview_foldable
+                } else if (resources.getBoolean(R.bool.is_picker_side_by_side)) {
+                    R.layout.fragment_small_preview_handheld_land
                 } else {
                     R.layout.fragment_small_preview_handheld
                 },

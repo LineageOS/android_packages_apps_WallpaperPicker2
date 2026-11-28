@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+<!-- View IDs must match fragment_small_preview_handheld. -->
+<androidx.constraintlayout.motion.widget.MotionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/small_preview_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:transitionGroup="true"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    app:layoutDescription="@xml/small_preview_fragment_layout_scene">
+
+    <include
+        android:id="@+id/toolbar_container"
+        layout="@layout/section_header_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/set_wallpaper_button_margin_end"
+        android:background="@drawable/apply_button_background_variant"
+        android:elevation="@dimen/wallpaper_preview_buttons_elevation"
+        android:gravity="center"
+        android:minWidth="@dimen/apply_button_width"
+        android:minHeight="@dimen/touch_target_min_height"
+        android:text="@string/next_page_content_description"
+        android:textColor="@color/system_on_primary"
+        android:textAppearance="@style/WallpaperPicker.Preview.TextAppearance.NoAllCaps"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/toolbar_container"
+        app:layout_constraintBottom_toBottomOf="@id/toolbar_container"/>
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/small_preview_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layoutDescription="@xml/small_preview_container_layout_scene_land">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_split"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <include layout="@layout/small_preview_pager_handheld"
+            android:id="@+id/preview_pager"/>
+
+        <HorizontalScrollView
+            android:id="@+id/preview_action_group_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scrollbars="none">
+
+            <com.android.wallpaper.picker.preview.ui.view.PreviewActionGroup
+                android:id="@+id/action_button_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </HorizontalScrollView>
+
+        <com.android.wallpaper.picker.preview.ui.view.PreviewActionFloatingSheet
+            android:id="@+id/floating_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <ViewStub
+        android:id="@+id/full_preview_tooltip_stub"
+        android:inflatedId="@+id/tooltip"
+        android:layout="@layout/tooltip_full_preview"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.motion.widget.MotionLayout>

@@ -17,9 +17,7 @@ package com.android.wallpaper.picker;
 
 import android.Manifest.permission;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
@@ -83,18 +81,6 @@ public class StandalonePreviewActivity extends BasePreviewActivity implements Ap
 
         if (fragment == null) {
             loadPreviewFragment();
-        }
-    }
-
-    @SuppressWarnings("MissingSuperCall") // TODO: Fix me
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Resources res = getResources();
-        boolean isDeviceFoldableOrTablet = res.getBoolean(R.bool.is_large_screen);
-
-        if (!isDeviceFoldableOrTablet) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
 

@@ -154,6 +154,9 @@ class CustomizationPickerFragment :
     private val startForResult =
         this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
+    /** Side-by-side mode sizes the header via the motion scene, not [updateHeaderHeightConstraints]. */
+    private var isSideBySide = false
+
     /** Whether the picker is embedded next to another pane, e.g. the Settings navigation list. */
     private var isEmbedded = false
 
@@ -243,6 +246,8 @@ class CustomizationPickerFragment :
     ): View {
         isMotionContainerInitialized = false
         isEmbedded = isActivityEmbedded()
+        // An embedded pane is too narrow to split again, so keep the single column layout there.
+        isSideBySide = resources.getBoolean(R.bool.is_picker_side_by_side) && !isEmbedded
 
         // For desktop UI, use fragment_customization_picker2_desktop layout to make the whole page
         // scrollable, unlike mobile devices where only the bottom area scroll.
@@ -252,6 +257,8 @@ class CustomizationPickerFragment :
         val layoutResId =
             if (isDesktopUi) {
                 R.layout.fragment_customization_picker2_desktop
+            } else if (isSideBySide) {
+                R.layout.fragment_customization_picker2_land
             } else {
                 R.layout.fragment_customization_picker2
             }
@@ -323,6 +330,14 @@ class CustomizationPickerFragment :
             // navigation with the hint hidden reports a visible nav bar with a bottom inset of 0
             // for as long as it is in use, which would otherwise leave the toolbar unpadded.
             applyStatusBarInset(toolbarContainer = toolbarContainer, statusBarHeight = insets.top)
+            if (isSideBySide) {
+                val horizontalInsets =
+                    windowInsets.getInsets(
+                        WindowInsetsCompat.Type.systemBars() or
+                            WindowInsetsCompat.Type.displayCutout()
+                    )
+                view.setPadding(horizontalInsets.left, view.paddingTop, horizontalInsets.right, 0)
+            }
             if (!(insets.bottom == 0 && isVisible)) {
                 // We should do nothing in the case of "bottom inset 0 with nav bar visible".
                 // The event usually happens when the system dispatches an initial pass to reset the
@@ -334,7 +349,7 @@ class CustomizationPickerFragment :
                     navBarHeight = insets.bottom,
                 )
 
-                if (isMotionContainerInitialized && !isDesktopUi) {
+                if (isMotionContainerInitialized && !isDesktopUi && !isSideBySide) {
                     // Reconfigure motion container constraints if already initialized, to adjust
                     // for new insets (doing it only after it's initialized to avoid jumping if
                     // insets first arrive before the first initialization)
@@ -434,7 +449,7 @@ class CustomizationPickerFragment :
                 if (this@CustomizationPickerFragment.view == null) return@post
                 // Post to wait for the essential view dimensions to be obtained, to further
                 // calculate the motion scene dimensions.
-                if (!isDesktopUi) {
+                if (!isDesktopUi && !isSideBySide) {
                     updateHeaderHeightConstraints(
                         pickerMotionContainer = pickerMotionContainer,
                         wallpaperPickerEntry = view.requireViewById(R.id.wallpaper_picker_entry),

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2026 The Android Open Source Project
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        android:id="@+id/show_floating_sheet"
+        app:constraintSetStart="@id/floating_sheet_gone"
+        app:constraintSetEnd="@id/floating_sheet_visible" />
+
+    <ConstraintSet android:id="@+id/floating_sheet_gone">
+        <Constraint
+            android:id="@+id/guideline_split"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <Constraint
+            android:id="@+id/preview_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/handheld_small_preview_pager_margin_top"
+            android:layout_marginBottom="@dimen/handheld_small_preview_pager_margin_bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_split"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Constraint
+            android:id="@+id/preview_action_group_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="1"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toEndOf="@+id/guideline_split"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Constraint
+            android:id="@+id/floating_sheet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/handheld_small_preview_action_group_margin_bottom"
+            app:layout_constraintStart_toEndOf="@+id/guideline_split"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/floating_sheet_visible">
+        <Constraint
+            android:id="@+id/guideline_split"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <Constraint
+            android:id="@+id/preview_pager"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/handheld_small_preview_pager_margin_top"
+            android:layout_marginBottom="@dimen/handheld_small_preview_pager_margin_bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_split"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Constraint
+            android:id="@+id/preview_action_group_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintStart_toEndOf="@+id/guideline_split"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Constraint
+            android:id="@+id/floating_sheet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/handheld_small_preview_action_group_margin_bottom"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/guideline_split"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </ConstraintSet>
+
+    <!-- The apply screen shows both previews with their checkboxes, so give it the full width. -->
+    <ConstraintSet android:id="@+id/show_apply_wallpaper">
+        <Constraint
+            android:id="@+id/guideline_split"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <Constraint
+            android:id="@+id/preview_pager"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Constraint
+            android:id="@+id/preview_action_group_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/guideline_split"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <Constraint
+            android:id="@+id/floating_sheet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/guideline_split"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
+    </ConstraintSet>
+</MotionScene>

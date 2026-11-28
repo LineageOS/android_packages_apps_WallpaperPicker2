@@ -53,6 +53,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.transition.Transition
+import androidx.window.embedding.ActivityEmbeddingController
 import com.android.customization.picker.clock.ui.view.ClockViewFactory
 import com.android.customization.picker.icon.ui.util.IconStyleViewUtil
 import com.android.systemui.customization.clocks.utils.ViewUtils.animateToAlpha
@@ -153,6 +154,8 @@ class CustomizationPickerFragment :
     private val startForResult =
         this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
+    private var isEmbedded = false
+
     private val isDesktopUi by lazy {
         context?.applicationContext?.let { appContext ->
             BaseFlags.get(appContext).shouldShowDesktopUi(appContext)
@@ -238,6 +241,7 @@ class CustomizationPickerFragment :
         savedInstanceState: Bundle?,
     ): View {
         isMotionContainerInitialized = false
+        isEmbedded = isActivityEmbedded()
 
         // For desktop UI, use fragment_customization_picker2_desktop layout to make the whole page
         // scrollable, unlike mobile devices where only the bottom area scroll.
@@ -439,6 +443,24 @@ class CustomizationPickerFragment :
                         packThemeSuggestedChip = packThemeSuggestedChip,
                         bottomInset = optionContainer.paddingBottom,
                     )
+                    val entry: WallpaperPickerEntry = view.requireViewById(R.id.wallpaper_picker_entry)
+                    if (entry.expandedHeight == 0) {
+                        entry.onDimensionsCaptured = {
+                            if (this@CustomizationPickerFragment.view != null) {
+                                updateHeaderHeightConstraints(
+                                    pickerMotionContainer = pickerMotionContainer,
+                                    wallpaperPickerEntry = entry,
+                                    previewLabelHeight =
+                                        view.requireViewById<View>(R.id.label_placeholder).height,
+                                    optionContainerHeight = optionContainer.height,
+                                    packThemeSuggestedChip = packThemeSuggestedChip,
+                                    bottomInset = optionContainer.paddingBottom,
+                                )
+                                pickerMotionContainer.rebuildScene()
+                                pickerMotionContainer.requestLayout()
+                            }
+                        }
+                    }
                 }
                 if (initialSelectedOption != null) {
                     // If initially on secondary screen, initiate the secondary screen and bind the
@@ -588,11 +610,10 @@ class CustomizationPickerFragment :
         packThemeSuggestedChip: PackThemeSuggestedChip?,
         bottomInset: Int,
     ) {
-        val isLargeScreenSingleDisplayPortrait = displayUtils.isLargeScreenSingleDisplayPortrait()
+        val keepWallpaperEntryExpanded = shouldKeepWallpaperEntryExpanded()
         val wallpaperPickerEntryExpandedHeight = wallpaperPickerEntry.expandedHeight
-        // Do not collapse the wallpaper entry when isLargeScreenSingleDisplayPortrait
         val wallpaperPickerEntryCollapsedHeight =
-            if (isLargeScreenSingleDisplayPortrait) wallpaperPickerEntryExpandedHeight
+            if (keepWallpaperEntryExpanded) wallpaperPickerEntryExpandedHeight
             else wallpaperPickerEntry.collapsedHeight
 
         val minCollapsedPreviewHeight =
@@ -639,12 +660,19 @@ class CustomizationPickerFragment :
             ?.constrainHeight(R.id.preview_header, expandedHeaderHeight)
     }
 
+    private fun shouldKeepWallpaperEntryExpanded(): Boolean =
+        displayUtils.isLargeScreenSingleDisplayPortrait() || isEmbedded
+
+    private fun isActivityEmbedded(): Boolean =
+        ActivityEmbeddingController.getInstance(requireContext())
+            .isActivityEmbedded(requireActivity())
+
     private fun setMotionLayoutOnTransitionCompleteListener(
         pickerMotionContainer: MotionLayout,
         wallpaperPickerEntry: WallpaperPickerEntry,
         packThemeSuggestedChip: PackThemeSuggestedChip?,
     ) {
-        val isLargeScreenSingleDisplayPortrait = displayUtils.isLargeScreenSingleDisplayPortrait()
+        val keepWallpaperEntryExpanded = shouldKeepWallpaperEntryExpanded()
         // Transition listener handle 2 things
         // 1. Expand and collapse the wallpaper entry
         // 2. Reset the transition and preview when transition back to the primary
@@ -654,16 +682,12 @@ class CustomizationPickerFragment :
 
                 override fun onTransitionCompleted(motionLayout: MotionLayout?, currentId: Int) {
                     if (currentId == R.id.expanded_header_primary) {
-                        // Do not collapse or expand the wallpaper entry when
-                        // isLargeScreenSingleDisplayPortrait is true
-                        if (!isLargeScreenSingleDisplayPortrait) {
+                        if (!keepWallpaperEntryExpanded) {
                             wallpaperPickerEntry.expand()
                             packThemeSuggestedChip?.animateToExpanded()
                         }
                     } else if (currentId == R.id.collapsed_header_primary) {
-                        // Do not collapse or expand the wallpaper entry when
-                        // isLargeScreenSingleDisplayPortrait is true
-                        if (!isLargeScreenSingleDisplayPortrait) {
+                        if (!keepWallpaperEntryExpanded) {
                             wallpaperPickerEntry.collapse()
                             packThemeSuggestedChip?.animateToCollapsed({})
                         }

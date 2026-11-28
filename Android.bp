@@ -37,6 +37,7 @@ android_library {
         "androidx.slice_slice-view",
         "androidx.transition_transition-ktx",
         "androidx.viewpager2_viewpager2",
+        "androidx.window_window",
         "androidx.navigation_navigation-ui-ktx",
         "androidx.navigation_navigation-fragment-ktx",
         "com.google.android.material_material",

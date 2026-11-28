@@ -70,6 +70,8 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
     var expandedHeight = 0
     private var collapsedWidth = 0
     var collapsedHeight = 0
+    var onDimensionsCaptured: (() -> Unit)? = null
+    private var isDimensionsCaptured = false
     private var progress = 1f
     private var animator: ValueAnimator? = null
     private var state: State = State.EXPANDED
@@ -109,24 +111,30 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         clipChildren = false
         clipToPadding = false
 
-        // For desktop UI, the wallpaper entry does not expand and collapse when scrolling. It is
-        // either initially expanded if there are carousel items or collapsed if no items.
-        if (!shouldShowDesktopUi) {
-            post {
-                // Make fixed width and height of the container, so it does not shrink with parent.
-                expandedContainer.layoutParams =
-                    LayoutParams(expandedContainer.width, expandedContainer.height).apply {
-                        gravity = Gravity.CENTER
-                    }
-            }
-        }
-
         // Use a ViewTreeObserver to get dimensions after the first layout pass
         viewTreeObserver.addOnGlobalLayoutListener(
             object : ViewTreeObserver.OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
+                    // An embedded activity can be laid out at zero width first.
+                    if (expandedContainer.width == 0 || expandedContainer.height == 0) return
                     // Ensure we only run this once
                     viewTreeObserver.removeOnGlobalLayoutListener(this)
+
+                    // For desktop UI, the wallpaper entry does not expand and collapse when
+                    // scrolling. It is either initially expanded if there are carousel items or
+                    // collapsed if no items.
+                    if (!shouldShowDesktopUi) {
+                        val containerWidth = expandedContainer.width
+                        val containerHeight = expandedContainer.height
+                        post {
+                            // Make fixed width and height of the container, so it does not shrink
+                            // with parent.
+                            expandedContainer.layoutParams =
+                                LayoutParams(containerWidth, containerHeight).apply {
+                                    gravity = Gravity.CENTER
+                                }
+                        }
+                    }
 
                     // Capture the fully expanded dimensions (default state)
                     expandedWidth = width
@@ -139,6 +147,9 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
                                 R.dimen.customization_option_container_horizontal_padding
                             ) * 4
                     collapsedHeight = collapsedButton.height
+                    isDimensionsCaptured = true
+                    if (progress != PROGRESS_EXPANDED) setProgress(progress)
+                    onDimensionsCaptured?.invoke()
                 }
             }
         )
@@ -185,6 +196,8 @@ constructor(context: Context, attrs: AttributeSet? = null) : FrameLayout(context
         radii[7] = defaultCornerRadius
         background.cornerRadii = radii
 
+        // Zero dimensions would shrink the entry to 0x0, so they would never be captured.
+        if (!isDimensionsCaptured) return
         layoutParams =
             (layoutParams as ConstraintLayout.LayoutParams).apply {
                 width = (collapsedWidth + (expandedWidth - collapsedWidth) * progress).toInt()
